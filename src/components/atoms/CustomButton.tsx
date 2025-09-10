@@ -1,4 +1,6 @@
 import React from 'react'
+import { ReactNode } from "react";
+
 
 
 interface ButtonProps {
@@ -6,14 +8,13 @@ interface ButtonProps {
     className?: string;
     type?: "button" | "submit" | "reset" | undefined;
     isDisabled?: boolean;
-    title?: string;
+    title?: ReactNode;
     value?: string;
-    iconClass?: string;
     id?: string;
 }
 
 
-function CustomButton({ id, type, value, handleClick, title, isDisabled,className }: ButtonProps) {
+function CustomButton({ id, type, value, handleClick, title, isDisabled, className }: ButtonProps) {
     return (
         <button
             id={id}

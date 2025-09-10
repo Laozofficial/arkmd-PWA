@@ -1,10 +1,13 @@
 import React from 'react'
 import CustomButton from '../../../components/atoms/CustomButton'
 import Image from '../../../assets/cheers.png'
+import { useNavigate } from 'react-router-dom';
 
 
 
 function Success({ step }) {
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -26,7 +29,7 @@ function Success({ step }) {
                         <CustomButton
                             title="Awwnn thanks 😊"
                             type="button"
-                            handleClick={() => { }}
+                            handleClick={() => { navigate('/login') }}
                             className='!w-full px-5'
                         />
                     </div>
