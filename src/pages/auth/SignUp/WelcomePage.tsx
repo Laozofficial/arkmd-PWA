@@ -87,7 +87,7 @@ function WelcomePage() {
                                     type='button'
                                     handleClick={handleProceed}
                                     className='!w-[350px]'
-                                // isDisabled
+                                    isDisabled={role == ''}
                                 />
                             </div>
                         </div>
