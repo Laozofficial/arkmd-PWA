@@ -1,33 +1,67 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
 import { errorMessages } from '../../../components/shared';
 import * as yup from "yup";
 import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout';
 import { Form, Formik } from 'formik';
 import CustomInput from '../../../components/atoms/CustomInput';
 import CustomButton from '../../../components/atoms/CustomButton';
+import { createPassword } from '../../../api/auth';
+import { useRecoilValue } from 'recoil';
+import { getResetStepsAtom } from '../../../recoil/atom/auth';
 
 
-function NewPasword({ step }) {
+function NewPasword({ step }: any) {
 
-    const Navigate = useNavigate();
+    const stepsValue = useRecoilValue(getResetStepsAtom);
 
-    interface Values {
-        email: string;
-    }
+    const [isLoading, setIsLoading] = useState(false);
 
-    const loginSchema = yup.object().shape({
-        email: yup
+    const resetSchema = yup.object().shape({
+        new_password: yup
             .string()
-            .email(errorMessages.email)
+            .required(errorMessages.required),
+
+        confirm_password: yup
+            .string()
+            .oneOf([yup.ref("new_password")], "Passwords must match")
             .required(errorMessages.required),
     });
 
+
     const initialState = {
-        email: "",
+        new_password: "",
+        confirm_password: "",
     };
 
-    const handleSubmit = () => { }
+    const handleSubmit = (values: any) => {
+
+        const payload = {
+            email: stepsValue.email,
+            otp: stepsValue.otp,
+            password: values.new_password,
+            password_confirmation: values.confirm_password,
+        }
+
+        createPassword(payload).then((res) => {
+            setIsLoading(true);
+            if (res?.success) {
+                setIsLoading(false);
+                step((prev: any) => prev + 1)
+            } else {
+                setIsLoading(false);
+            }
+        })
+    }
+
+
+    if (isLoading) {
+        return (
+            <div className="h-[100vh] flex items-center justify-center">
+                <p>Loading....</p>
+            </div>
+        )
+    }
+
 
     return (
         <>
@@ -44,10 +78,10 @@ function NewPasword({ step }) {
                     <div className="">
                         <div className="">
                             <div className="mt-10">
-                                <Formik<Values>
+                                <Formik
                                     initialValues={initialState}
-                                    onSubmit={handleSubmit}
-                                    validationSchema={loginSchema}
+                                    onSubmit={(values) => handleSubmit(values)}
+                                    validationSchema={resetSchema}
                                 >
                                     {() => (
                                         <Form>
@@ -75,8 +109,8 @@ function NewPasword({ step }) {
                                                 <div className="mb-8">
                                                     <CustomButton
                                                         title="Proceed"
-                                                        type="button"
-                                                        handleClick={() => step((prev) => prev + 1)}
+                                                        type="submit"
+                                                        handleClick={() => { }}
                                                         className='!w-[350px]'
                                                     />
                                                 </div>

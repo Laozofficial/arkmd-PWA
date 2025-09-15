@@ -4,21 +4,50 @@ import CustomButton from '../../../components/atoms/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../../components/atoms/CustomModal';
 import Image from '../../../assets/question.png'
+import { createUserType } from '../../../api/auth';
+
+
 
 function WelcomePage() {
 
     const Navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [role, setRole] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
+
+    const storeUserType = (type: any) => {
+        createUserType({ type: type }).then((res) => {
+            setIsLoading(true);
+            if (res?.success) {
+                setIsLoading(false);
+                Navigate(`/${type}`);
+            } else {
+                setIsLoading(false);
+            }
+        })
+    }
+
     const handleProceed = () => {
         if (role == 'doctor') {
-            Navigate('/doctor')
+            storeUserType('doctor');
+
         } else {
-            Navigate('/patient')
+            storeUserType('patient')
         }
     }
+
+
+    if (isLoading) {
+        return (
+            <div className="h-[100vh] flex items-center justify-center">
+                <p>Loading....</p>
+            </div>
+        )
+    }
+
 
     return (
         <>

@@ -2,7 +2,6 @@
 
 export const errorMessages = {
   email: "Email is not valid",
-  orgEmail: "Email is not valid organization email",
   maxChar: (num: number) =>
     `This field cannot have more than ${num} characters`,
   minChar: (num: number) => `This field must be at least ${num} characters`,

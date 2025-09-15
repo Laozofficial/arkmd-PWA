@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaX } from 'react-icons/fa6';
 import { IoArrowBackOutline, IoCheckmarkSharp } from 'react-icons/io5';
+import { getAllPlan, getUserPlan } from '../../api/payment';
 
 
 
@@ -9,6 +10,58 @@ function Pricing() {
     const [selected, setSelected] = useState("");
     const [selectedPrice, setSelectedPrice] = useState<string | number>(0);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [pricePlans, setPricePlans] = useState([]);
+    const [userCountry, setUserCountry] = useState('nigeria');
+
+
+
+
+    const fetchAllPlans = () => {
+        setIsLoading(true);
+        getAllPlan().then((res) => {
+            if (res?.success) {
+                setPricePlans(res.data);
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
+            }
+        });
+    }
+
+    const fetchUserPlans = () => {
+        setIsLoading(true);
+        getUserPlan().then((res) => {
+            if (res?.success) {
+                setUserPlans(res.data);
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
+            }
+        });
+    }
+
+
+    useEffect(() => {
+        fetchAllPlans();
+        fetchUserPlans();
+    }, [])
+
+
+    // console.log(pricePlans, userPlans);
+
+
+
+
+    if (isLoading) {
+        return (
+            <div className="h-[100vh] flex items-center justify-center">
+                <p>Loading....</p>
+            </div>
+        )
+    }
+
+
 
     const priceType = [
         { name: 'Yearly', value: 'yearly' },
@@ -65,6 +118,8 @@ function Pricing() {
     ]
 
 
+
+
     return (
         <>
             <div className="py-8 px-5 ">
@@ -105,7 +160,7 @@ function Pricing() {
 
                     <div className="grid grid-cols-1 gap-3">
                         {
-                            plans.map(({ name, descr, monthly_price, yearly_price }, index) => (
+                            plans.map(({ name, frequency, country, currency, descr, yearly_price, plan, price }, index) => (
                                 <div key={index}>
                                     <div>
                                         <div
@@ -126,7 +181,7 @@ function Pricing() {
                                             />
                                             <div>
                                                 <p className="text-[16px]">
-                                                    {name} ({selectedPrice == 0 ? yearly_price : monthly_price}
+                                                    {name} ({selectedPrice == 0 ? yearly_price : price}
                                                     {selectedPrice == 0 ? "/y" : "/m"})
                                                 </p>
                                                 <p className="text-[12px] font-light">{descr}</p>
