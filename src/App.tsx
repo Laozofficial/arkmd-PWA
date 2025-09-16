@@ -11,7 +11,7 @@ import AddPatient from './pages/chat/Doctors/AddPatient'
 import Pricing from './pages/pricing'
 import ManagePatient from './pages/chat/Doctors/ManagePatient'
 import ChangePassword from './pages/auth/ChangePassword.tsx'
-import Error from './pages/error'
+import Error from '../src/pages/Error'
 
 
 
