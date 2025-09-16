@@ -25,6 +25,16 @@ input[type="radio"]:checked {
   background-color: #0a0a0a;
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 input[type="radio"]:checked::after {
   content: "";
   width: 8px;

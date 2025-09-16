@@ -37,7 +37,7 @@ const CustomInput = ({
 
   return (
     <>
-      <div className={`${container} font-poppins text-neutral-dark w-full`}>
+      <div className={`${container} font-poppins !text-black w-full`}>
         {label && (
           <div className="text-[14px] mb-2 text-[#F9F9F9]">
             <label htmlFor={id}>{label}</label>
@@ -45,8 +45,8 @@ const CustomInput = ({
         )}
         <div className="relative">
           <input
-            className={`rounded-lg relative placeholder:text-[#B7B7B780] bg-[#ABD9F60D] text-[#B7B7B780] ${inputClassName}  h-[50px] px-3 w-full ${meta.touched && meta.error ? "!border !border-alert-text-error" : ""
-              }  `}
+            className={`rounded-lg relative  placeholder:text-[#B7B7B780] bg-[#ABD9F60D]  text-[#F9F9F9]  focus:bg-[#ABD9F60D] focus:outline-none focus:ring-0 ${inputClassName} focus:border-none border-0 h-[50px] px-3 w-full
+  `}
             id={id}
             disabled={disabled}
             type={type === "password" && showPassword ? "text" : type}
@@ -55,13 +55,13 @@ const CustomInput = ({
             {...props}
           />
           {icon && iconPosition === "end" && icon}
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-1/3 right-5 ">
             {type === "password" && showPassword ? (
-              <Eye className="cursor-pointer" onClick={handleShowPassword} color="red" />
+              <Eye size={16} className="cursor-pointer" color='#F9F9F9' onClick={handleShowPassword} />
             ) : (
               type === "password" &&
               !showPassword && (
-                <EyeSlash className="cursor-pointer" onClick={handleShowPassword} color="red" />
+                <EyeSlash size={16} className="cursor-pointer" color='#F9F9F9' onClick={handleShowPassword} />
               )
             )}
           </div>
@@ -74,3 +74,10 @@ const CustomInput = ({
 };
 
 export default CustomInput;
+
+
+
+
+
+
+

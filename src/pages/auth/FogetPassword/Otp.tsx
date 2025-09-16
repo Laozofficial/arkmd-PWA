@@ -3,16 +3,28 @@ import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout'
 import OTPInput from "react-otp-input";
 import CustomButton from '../../../components/atoms/CustomButton';
 import { Form, Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { getResetStepsAtom } from '../../../recoil/atom/auth';
 
 
 
+function Otp({ step }: any) {
+
+    const Navigate = useNavigate();
+
+    const [resetOtp, setResetOtp] = useState('');
+
+    const [, setStepsAtom] = useRecoilState(getResetStepsAtom);
+
+    const handleSubmit = () => {
+        setStepsAtom((prev: any) => ({
+            ...prev, otp: resetOtp
+        }));
+        step((prev: any) => prev + 1)
+    }
 
 
-function Otp({ step }) {
-
-    const [resetOtp, setResetOtp] = useState<string>('');
-
-    const handleSubmit = () => { }
 
     return (
         <>
@@ -52,8 +64,19 @@ function Otp({ step }) {
                                 </div>
                                 <div className="flex flex-col gap-4">
                                     <div className="text-[14px] flex flex-col items-center justify-center mt-[80px]">
-                                        <p>I didn't recieve any code <span className='text-[#FFDE59] underline'>Resend</span></p>
-                                        <p className='text-[#FFDE59] underline'>Use another mail</p>
+                                        <p>I didn't recieve any code
+                                            <span
+                                                className='text-[#FFDE59] underline cursor-pointer'
+                                                onClick={() => { }}
+                                            >
+                                                Resend
+                                            </span>
+                                        </p>
+                                        <p className='text-[#FFDE59] underline cursor-pointer'
+                                            onClick={() => { Navigate('/login') }}
+                                        >
+                                            Use another mail
+                                        </p>
                                     </div>
                                     <div
                                         className=""
@@ -63,7 +86,8 @@ function Otp({ step }) {
                                                 <CustomButton
                                                     title='Proceed'
                                                     type='button'
-                                                    handleClick={() => step((prev) => prev + 1)}
+                                                    // handleClick={() => step((prev: any) => prev + 1)}
+                                                    handleClick={handleSubmit}
                                                     className='!w-[350px]'
                                                 // isDisabled
                                                 />

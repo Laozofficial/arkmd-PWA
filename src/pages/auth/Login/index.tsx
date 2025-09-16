@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout'
 import { Form, Formik } from 'formik'
 import CustomInput from '../../../components/atoms/CustomInput'
@@ -8,6 +8,9 @@ import { FaGoogle } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
 import { errorMessages } from '../../../components/shared'
 import * as yup from "yup";
+import { loginUser } from '../../../api/auth'
+import { getLoggedUserAtom } from '../../../recoil/atom/auth'
+import { useRecoilState } from 'recoil'
 // import CustomLoader from '../../../components/atoms/CustomLoader'
 
 
@@ -15,7 +18,10 @@ function Login() {
 
   const Navigate = useNavigate();
 
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
+  
 
   interface Values {
     email: string;
@@ -35,13 +41,50 @@ function Login() {
     password: "",
   };
 
-  const handleSubmit = () => { }
+  const handleSubmit = (values: any) => {
 
-  // if (isLoading) {
-  //   return (
-  //     <CustomLoader />
-  //   )
-  // }
+    const payload = {
+      email: values.email,
+      password: values.password,
+    }
+
+    setIsLoading(true);
+
+    loginUser(payload).then((res) => {
+
+      if (res?.success) {
+        setLoggedUserAtom(res.data.user);
+
+        const token = res.data.access_token.token;
+        const type = res.data.user.type;
+        localStorage.setItem("token", token);
+
+        setIsLoading(false);
+
+        if (type !== null) {
+          Navigate(`/${type}`)
+          setIsLoading(false);
+        } else {
+          Navigate('/welcome')
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(false);
+      }
+    })
+  }
+
+
+
+  if (isLoading) {
+    return (
+      <div className="h-[100vh] flex items-center justify-center">
+        <p>Loading....</p>
+      </div>
+    )
+  }
+
+
 
   return (
     <>
@@ -83,15 +126,18 @@ function Login() {
                       </div>
                       <div
                         className="font-light text-[12px] flex justify-end cursor-pointer"
-                        onClick={() => Navigate('/forget-password')}
                       >
-                        <p>Forget password ?</p>
+                        <p
+                          onClick={() => Navigate('/forget-password')}
+                        >
+                          Forget password ?
+                        </p>
                       </div>
                       <div className="mt-[16px]">
                         <CustomButton
                           title='Login'
-                          type='button'
-                          handleClick={() => { Navigate('/welcome') }}
+                          type='submit'
+                          handleClick={() => { }}
                           className='!w-full'
                         // isDisabled
                         />

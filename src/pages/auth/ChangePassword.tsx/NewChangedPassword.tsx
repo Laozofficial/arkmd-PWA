@@ -1,33 +1,64 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout';
 import { Form, Formik } from 'formik';
 import CustomInput from '../../../components/atoms/CustomInput';
 import CustomButton from '../../../components/atoms/CustomButton';
 import * as yup from "yup";
 import { errorMessages } from '../../../components/shared';
+import { changePassword } from '../../../api/auth';
 
 
 
-function NewChangedPassword({ step }) {
+function NewChangedPassword({ step }: any) {
 
-    // const Navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
-    interface Values {
-        email: string;
-    }
-
-    const loginSchema = yup.object().shape({
-        email: yup
+    const changePasswordSchema = yup.object().shape({
+        current_password: yup
             .string()
-            .email(errorMessages.email)
+            .required(errorMessages.required),
+        password: yup
+            .string()
+            .min(6, "Password must be at least 6 characters")
+            .required(errorMessages.required),
+        password_confirmation: yup
+            .string()
+            .oneOf([yup.ref("password")], "Passwords must match")
             .required(errorMessages.required),
     });
 
+
     const initialState = {
-        email: "",
+        current_password: "",
+        password: "",
+        password_confirmation: "",
     };
 
-    const handleSubmit = () => { }
+    const handleSubmit = (values: any) => {
+
+        setIsLoading(true);
+
+        changePassword(values).then((res) => {
+            if (res?.success) {
+                setIsLoading(false);
+                step((prev: any) => prev + 1)
+            } else {
+                setIsLoading(false);
+            }
+        });
+
+    }
+
+    if (isLoading) {
+        return (
+            <div className="h-[100vh] flex items-center justify-center">
+                <p>Loading....</p>
+            </div>
+        )
+    }
+
+
+
 
     return (
         <>
@@ -44,10 +75,10 @@ function NewChangedPassword({ step }) {
                     <div className="">
                         <div className="">
                             <div className="mt-10">
-                                <Formik<Values>
+                                <Formik
                                     initialValues={initialState}
                                     onSubmit={handleSubmit}
-                                    validationSchema={loginSchema}
+                                    validationSchema={changePasswordSchema}
                                 >
                                     {() => (
                                         <Form>
@@ -55,37 +86,37 @@ function NewChangedPassword({ step }) {
                                                 <div className="grid grid-cols-1 gap-4">
                                                     <div className="grid grid-cols-1 gap-5">
                                                         <CustomInput
-                                                            label="Email"
-                                                            id="email"
-                                                            name="email"
-                                                            placeholder="Enter your email"
-                                                            type="text"
+                                                            label="Current password"
+                                                            id="current_password"
+                                                            name="current_password"
+                                                            placeholder="Enter your current password"
+                                                            type="password"
                                                         />
                                                     </div>
                                                     <div className="grid grid-cols-1 gap-5">
                                                         <CustomInput
                                                             label="New password"
-                                                            id="new_password"
-                                                            name="new_password"
+                                                            id="password"
+                                                            name="password"
                                                             placeholder="Enter your new password "
-                                                            type="text"
+                                                            type="password"
                                                         />
                                                     </div>
                                                     <div className="grid grid-cols-1 gap-5">
                                                         <CustomInput
                                                             label="Confirm password"
-                                                            id="confirm_password"
-                                                            name="confirm_password"
+                                                            id="password_confirmation"
+                                                            name="password_confirmation"
                                                             placeholder="confirm your password "
-                                                            type="text"
+                                                            type="password"
                                                         />
                                                     </div>
                                                 </div>
                                                 <div className="mb-8 w-full">
                                                     <CustomButton
                                                         title="Proceed"
-                                                        type="button"
-                                                        handleClick={() => step((prev: any) => prev + 1)}
+                                                        type="submit"
+                                                        handleClick={() => { }}
                                                         className='!w-full'
                                                     />
                                                 </div>
