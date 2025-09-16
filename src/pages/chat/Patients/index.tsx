@@ -206,7 +206,7 @@ function Patients() {
                                     src={New}
                                     alt="icon"
                                     className='h-full w-full object-cover'
-                                />
+                                />  
                             </div>
                             <div>
                                 <CustomButton
@@ -232,7 +232,7 @@ function Patients() {
                             className="flex-1 overflow-y-auto pb-32 show-scrollbar"
                         >
                             {
-                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse }: any, index: any) => (
+                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse, createdAt }: any, index: any) => (
                                     <div
                                         key={index}
                                         className="mt-10 space-y-4 text-[14px]"
@@ -255,10 +255,11 @@ function Patients() {
                                             </div>
                                         </div>
                                         <div className="flex justify-start">
-                                            <div className="p-2 bg-white rounded-lg text-black max-w-[300px]">
-                                                <ReactMarkdown>{String(assistantResponse)}</ReactMarkdown>
+                                            <div className="p-2 bg-white rounded-lg text-black max-w-[270px] whitespace-pre-wrap">
+                                                <ReactMarkdown>{String(assistantResponse).replace(/(?<!\n)\n(?!\n)/g, '\n')}</ReactMarkdown>
                                             </div>
                                         </div>
+                                        <div className="mt-3 text-[6px] opacity-40 leading-none" style={{ fontSize: '6px' }}>{new Date(createdAt).toLocaleString()}</div>
                                     </div>
                                 ))
                             }
@@ -280,8 +281,8 @@ function Patients() {
                             </div>
 
                             <div className="flex flex-col justify-between items-center font-extralight text-[12px] text-[#7E7E7E] mt-[80px]">
-                                <p>arkMD doesn't replace doctors, it co-pilots</p>
-                                <p>with them save lives.</p>
+                                <p>ArkMD doesn't replace doctors, it co-pilots</p>
+                                <p>with them to save lives.</p>
                             </div>
                         </div>
                 }
