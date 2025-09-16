@@ -209,7 +209,7 @@ function Patients() {
                                     src={New}
                                     alt="icon"
                                     className='h-full w-full object-cover'
-                                />
+                                />  
                             </div>
                             <div>
                                 <CustomButton
