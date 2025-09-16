@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from '../../../components/atoms/CustomButton'
-import { FaArrowLeft, FaCaretDown, FaPlus, FaRegStar, FaStop, FaXmark } from 'react-icons/fa6'
+import { FaArrowLeft, FaCaretDown, FaPlus, FaRegStar, FaXmark } from 'react-icons/fa6'
 import { IoSend } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import CustomSidBarModal from '../../../components/atoms/CustomSideBarModal'
@@ -11,6 +11,9 @@ import User from '../../../assets/Usericon.png'
 import Logo from '../../../assets/arkmd-logo.png'
 import { generateSessionId, getChatHistoryById, getChatLimit, getChatSummary, handleChatPrompt } from '../../../api/chat'
 import ReactMarkdown from 'react-markdown';
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { getChatSessionIdAtom, getCurrentChatHistoryAtom } from '../../../recoil/atom/chat'
+import { getLoggedUserAtom } from '../../../recoil/atom/auth'
 
 
 
@@ -25,13 +28,21 @@ function Patients() {
     const [isChatLoading, setIsChatLoading] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [showSideBar, setShowSideBar] = useState(false);
-    const [sessionId, setSessionId] = useState('');
     const [chat, setChat] = useState<any>('');
-    const [chatHistory, setChatHistory] = useState<any>([]);
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [chatSummary, setChatSummary] = useState<any>([]);
     const [limitReached, setLimitReached] = useState(false);
+
+
+    const [, setChatHistoryAtom] = useRecoilState(getCurrentChatHistoryAtom);
+    const getChatHistoryValue = useRecoilValue(getCurrentChatHistoryAtom);
+
+    const [, setChatSessionAtom] = useRecoilState(getChatSessionIdAtom);
+    const getChatSessionIdValue = useRecoilValue(getChatSessionIdAtom);
+
+    const getLoggedUserValue = useRecoilValue(getLoggedUserAtom);
+
 
 
     const secureUrl = (url: string) => {
@@ -76,7 +87,7 @@ function Patients() {
         setIsLoading(true);
         generateSessionId().then((res) => {
             if (res?.success) {
-                setSessionId(res.data);
+                setChatSessionAtom(res.data);
                 localStorage.setItem("session_id", res.data);
                 setIsLoading(false);
             }
@@ -85,46 +96,51 @@ function Patients() {
 
     const getChatHistory = () => {
         setIsChatLoading(true);
-        getChatHistoryById(sessionId).then((res) => {
+        getChatHistoryById(getChatSessionIdValue).then((res) => {
             if (res?.success) {
-                setChatHistory(res.data);
+                setChatHistoryAtom(res.data);
                 setIsChatLoading(false);
             }
         });
     }
 
     const handleChat = (prompt: any) => {
-        HandleChatLimit();
-        setIsChatLoading(true);
-        const formData = new FormData();
-        formData.append("session_id", sessionId);
-        formData.append("prompt", prompt);
-        formData.append("patient_id", "");
-        if (selectedFile) {
-            formData.append("image", selectedFile);
-        }
-
-        handleChatPrompt(formData).then((res) => {
-            if (res?.success) {
-                setChat('');
-                setSelectedFile(null)
-                getChatHistory();
+        if (chat !== '') {
+            HandleChatLimit();
+            setIsChatLoading(true);
+            const formData = new FormData();
+            formData.append("session_id", getChatSessionIdValue);
+            formData.append("prompt", prompt);
+            formData.append("patient_id", "");
+            if (selectedFile) {
+                formData.append("image", selectedFile);
             }
-            setIsChatLoading(false);
-        });
+
+            handleChatPrompt(formData).then((res) => {
+                if (res?.success) {
+                    setChat('');
+                    setSelectedFile(null)
+                    getChatHistory();
+                }
+                setIsChatLoading(false);
+            });
+        } else {
+            return;
+        }
     };
 
     const newChat = () => {
         generateId();
-        setChatHistory([]);
+        setChatHistoryAtom([]);
     }
 
     const fetchChatHistory = (id: any) => {
         setIsLoading(true);
         getChatHistoryById(id).then((res) => {
             if (res?.success) {
-                setShowHistory(false)
-                setChatHistory(res.data);
+                setChatSessionAtom(id);
+                setShowHistory(false);
+                setChatHistoryAtom(res.data);
                 HandleChatLimit();
                 setIsLoading(false);
             }
@@ -139,7 +155,7 @@ function Patients() {
     useEffect(() => {
         const savedId = localStorage.getItem("session_id");
         if (savedId) {
-            setSessionId(savedId);
+            setChatSessionAtom(savedId);
         } else {
             generateId();
         }
@@ -149,7 +165,7 @@ function Patients() {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [chatHistory, isChatLoading]);
+    }, [getChatHistoryValue, isChatLoading]);
 
     useEffect(() => {
         HandleChatSummary();
@@ -164,9 +180,6 @@ function Patients() {
             </div>
         )
     }
-
-
-
 
 
 
@@ -217,12 +230,12 @@ function Patients() {
 
                 </div>
                 {
-                    chatHistory?.length !== 0 ?
+                    getChatHistoryValue?.length !== 0 ?
                         <div
                             className="flex-1 overflow-y-auto pb-32 show-scrollbar"
                         >
                             {
-                                chatHistory.map(({ imageUrl, userPrompt, assistantResponse }: any, index: any) => (
+                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse }: any, index: any) => (
                                     <div
                                         key={index}
                                         className="mt-10 space-y-4 text-[14px]"
@@ -264,7 +277,7 @@ function Patients() {
                         :
                         <div className="flex-1 mt-24 flex flex-col">
                             <div className="text-[28px]">
-                                <p className="font-semibold">Hello Josh,</p>
+                                <p className="font-semibold">Hello {getLoggedUserValue?.firstName},</p>
                                 <p className="font-extralight text-[#C5C5C5]">How are you feeling</p>
                                 <p className="font-extralight text-[#C5C5C5]">today?</p>
                             </div>

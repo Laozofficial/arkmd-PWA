@@ -5,6 +5,7 @@ import { getAllPlan, getUserPlan } from '../../api/payment';
 
 
 
+
 function Pricing() {
 
     const [selected, setSelected] = useState("");
@@ -13,7 +14,6 @@ function Pricing() {
     const [isLoading, setIsLoading] = useState(false);
     const [pricePlans, setPricePlans] = useState([]);
     const [userCountry, setUserCountry] = useState('nigeria');
-
 
 
 
@@ -33,7 +33,7 @@ function Pricing() {
         setIsLoading(true);
         getUserPlan().then((res) => {
             if (res?.success) {
-                setUserPlans(res.data);
+                // setUserPlans(res.data);
                 setIsLoading(false);
             } else {
                 setIsLoading(false);
@@ -41,16 +41,10 @@ function Pricing() {
         });
     }
 
-
     useEffect(() => {
         fetchAllPlans();
         fetchUserPlans();
     }, [])
-
-
-    // console.log(pricePlans, userPlans);
-
-
 
 
     if (isLoading) {
@@ -62,6 +56,7 @@ function Pricing() {
     }
 
 
+    
 
     const priceType = [
         { name: 'Yearly', value: 'yearly' },

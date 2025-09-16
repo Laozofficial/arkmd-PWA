@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom'
 import { errorMessages } from '../../../components/shared'
 import * as yup from "yup";
 import { loginUser } from '../../../api/auth'
+import { getLoggedUserAtom } from '../../../recoil/atom/auth'
+import { useRecoilState } from 'recoil'
 // import CustomLoader from '../../../components/atoms/CustomLoader'
 
 
@@ -17,6 +19,9 @@ function Login() {
   const Navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
+  
 
   interface Values {
     email: string;
@@ -43,13 +48,19 @@ function Login() {
       password: values.password,
     }
 
+    setIsLoading(true);
+
     loginUser(payload).then((res) => {
 
       if (res?.success) {
+        setLoggedUserAtom(res.data.user);
+
         const token = res.data.access_token.token;
         const type = res.data.user.type;
         localStorage.setItem("token", token);
+
         setIsLoading(false);
+
         if (type !== null) {
           Navigate(`/${type}`)
           setIsLoading(false);

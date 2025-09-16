@@ -32,6 +32,23 @@
   border-radius: 10px;
 }
 
+.Toastify__toast {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-radius: 40px !important;
+  height: 40px !important;
+  border: 0.5px solid #F63D4A40;
+  margin-top: 5px;
+}
+
+.Toastify__toast--success {
+  background-color: #0A0A0A !important; 
+}
+
+.Toastify__toast--error {
+  background-color: #0A0A0A !important; 
+}
+
 @keyframes floatPulse {
   0% {
     transform: translate(0, 0) scale(1);

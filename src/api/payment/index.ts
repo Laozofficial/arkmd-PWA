@@ -5,7 +5,10 @@ export async function getAllPlan() {
     const response = await api.get(`/payment/get-plans`);
     return response.data;
   } catch (error: any) {
-    console.log(error.res);
+    if (error.response.status === 401) {
+      window.location.href = "/";
+      localStorage.clear();
+    }
   }
 }
 
@@ -14,6 +17,9 @@ export async function getUserPlan() {
     const response = await api.get(`/payment/get-user-plan`);
     return response.data;
   } catch (error: any) {
-    console.log(error.res);
+    if (error.response.status === 401) {
+      window.location.href = "/";
+      localStorage.clear();
+    }
   }
 }

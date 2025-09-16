@@ -8,6 +8,8 @@ import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout';
 import { FaApple, FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../../../api/auth';
+import { getLoggedUserAtom } from '../../../recoil/atom/auth';
+import { useRecoilState } from 'recoil';
 
 
 
@@ -16,6 +18,8 @@ function SignUp() {
     const Navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
 
     interface Values {
         first_name: string,
@@ -62,6 +66,9 @@ function SignUp() {
         const res = await loginUser({ email, password });
 
         if (res?.success) {
+
+            setLoggedUserAtom(res.data.user);
+
             const token = res.data.access_token.token;
             const type = res.data.user.type;
             localStorage.setItem("token", token);
@@ -94,6 +101,8 @@ function SignUp() {
                 email: values.email,
                 password: values.password,
             });
+        } else {
+            setIsLoading(false);
         }
     };
 

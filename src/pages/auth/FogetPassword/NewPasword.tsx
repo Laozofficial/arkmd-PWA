@@ -27,7 +27,6 @@ function NewPasword({ step }: any) {
             .required(errorMessages.required),
     });
 
-
     const initialState = {
         new_password: "",
         confirm_password: "",

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomSelect from '../../../components/atoms/CustomSelect';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa6';
 import { createNewPatient } from '../../../api/chat';
+import { IoArrowBackOutline } from 'react-icons/io5';
 
 
 function AddPatient() {
@@ -79,9 +80,17 @@ function AddPatient() {
     return (
         <>
             <div className="py-10 px-5 ">
-                <div className="flex flex-col items-center justify-center gap-1 ">
+                <div className="flex flex-col items-center justify-center gap-1 relative">
+                    <div
+                        className="absolute top-5 left-0 cursor-pointer"
+                        onClick={() => window.history.back()}
+                    >
+                        <IoArrowBackOutline />
+                    </div>
                     <p className="text-[19px] font-bold">Add new patient</p>
-                    <p className="text-[13px] font-light">Enter patient information</p>
+                    <p className="text-[13px] font-light">
+                        Enter patient information
+                    </p>
                     <hr className="w-full border-t border-[#B7B7B780] mt-3" />
                 </div>
 

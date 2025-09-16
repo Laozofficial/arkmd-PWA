@@ -9,3 +9,9 @@ export const getResetStepsAtom = atom<any>({
   },
   effects_UNSTABLE: [persistAtom],
 });
+
+export const getLoggedUserAtom = atom<any>({
+  key: "getLoggedUserState",
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+});

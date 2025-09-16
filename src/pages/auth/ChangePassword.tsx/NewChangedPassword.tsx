@@ -14,7 +14,7 @@ function NewChangedPassword({ step }: any) {
     const [isLoading, setIsLoading] = useState(false);
 
     const changePasswordSchema = yup.object().shape({
-        currentPassword: yup
+        current_password: yup
             .string()
             .required(errorMessages.required),
         password: yup
@@ -29,14 +29,14 @@ function NewChangedPassword({ step }: any) {
 
 
     const initialState = {
-        currentPassword: "",
+        current_password: "",
         password: "",
         password_confirmation: "",
     };
 
     const handleSubmit = (values: any) => {
 
-        // setIsLoading(true);
+        setIsLoading(true);
 
         changePassword(values).then((res) => {
             if (res?.success) {
@@ -87,8 +87,8 @@ function NewChangedPassword({ step }: any) {
                                                     <div className="grid grid-cols-1 gap-5">
                                                         <CustomInput
                                                             label="Current password"
-                                                            id="currentPassword"
-                                                            name="currentPassword"
+                                                            id="current_password"
+                                                            name="current_password"
                                                             placeholder="Enter your current password"
                                                             type="password"
                                                         />
