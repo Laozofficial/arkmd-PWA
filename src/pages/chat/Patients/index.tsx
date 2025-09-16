@@ -182,7 +182,7 @@ function Patients() {
 
     return (
         <>
-            <div className="p-5 h-screen flex flex-col relative">
+            <div className="p-5 h-screen flex flex-col relative"> 
 
                 <div className="relative">
                     <div className="text-[#FFDE59] flex items-center justify-between pb-5">
