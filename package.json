@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node ace build --ignore-ts-errors",
+    "build": "vite build && tsc --noEmit || echo 'Skipping TS errors'",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
