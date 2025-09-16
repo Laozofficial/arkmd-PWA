@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 import './App.css'
+// import "react-toastify/dist/ReactToastify.css";
 import { registerSW } from 'virtual:pwa-register'
 import { BrowserRouter } from 'react-router-dom'
 import { RecoilRoot } from 'recoil'
+import { ToastContainer } from 'react-toastify'
 
 
 registerSW({
@@ -23,6 +25,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <RecoilRoot>
       <BrowserRouter>
         <App />
+        <ToastContainer newestOnTop={false} />
+        <ToastContainer newestOnTop={false} />
       </BrowserRouter>
     </RecoilRoot>
   </React.StrictMode>

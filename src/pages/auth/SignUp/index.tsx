@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CustomButton from '../../../components/atoms/CustomButton'
 import CustomInput from '../../../components/atoms/CustomInput'
 import { Form, Formik } from 'formik'
@@ -7,6 +7,9 @@ import * as yup from "yup";
 import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout';
 import { FaApple, FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { loginUser, registerUser } from '../../../api/auth';
+import { getLoggedUserAtom } from '../../../recoil/atom/auth';
+import { useRecoilState } from 'recoil';
 
 
 
@@ -14,27 +17,106 @@ function SignUp() {
 
     const Navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
+
     interface Values {
+        first_name: string,
+        last_name: string,
         email: string;
         password: string;
         confirm_password: string;
     }
 
     const signUpSchema = yup.object().shape({
+        first_name: yup
+            .string()
+            .required(errorMessages.required)
+            .min(2, "First name must be at least 2 characters"),
+        last_name: yup
+            .string()
+            .required(errorMessages.required)
+            .min(2, "Last name must be at least 2 characters"),
         email: yup
             .string()
-            .email(errorMessages.email)
+            .required(errorMessages.required)
+            .email(errorMessages.email),
+        password: yup
+            .string()
+            .required(errorMessages.required)
+            .min(6, "Password must be at least 6 characters"),
+        confirm_password: yup
+            .string()
+            .oneOf([yup.ref("password")], "Passwords must match")
             .required(errorMessages.required),
-        password: yup.string().required(errorMessages.required),
     });
 
     const initialState = {
+        first_name: "",
+        last_name: "",
         email: "",
         password: "",
         confirm_password: "",
     };
 
-    const handleSubmit = () => { }
+    const handleLogin = async ({ email, password }: any) => {
+
+        setIsLoading(true);
+        const res = await loginUser({ email, password });
+
+        if (res?.success) {
+
+            setLoggedUserAtom(res.data.user);
+
+            const token = res.data.access_token.token;
+            const type = res.data.user.type;
+            localStorage.setItem("token", token);
+            if (type !== null) {
+                Navigate(`/${type}`)
+                setIsLoading(false);
+            } else {
+                Navigate('/welcome')
+                setIsLoading(false);
+            }
+        } else {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSubmit = async (values: any) => {
+        const payload = {
+            first_name: values.first_name,
+            last_name: values.last_name,
+            email: values.email,
+            password: values.password,
+            password_confirmation: values.confirm_password,
+        };
+
+        setIsLoading(true);
+        const res = await registerUser(payload);
+
+        if (res?.success) {
+            await handleLogin({
+                email: values.email,
+                password: values.password,
+            });
+        } else {
+            setIsLoading(false);
+        }
+    };
+
+
+
+    if (isLoading) {
+        return (
+            <div className="h-[100vh] flex items-center justify-center">
+                <p>Loading....</p>
+            </div>
+        )
+    }
+
+
 
     return (
         <>
@@ -42,7 +124,7 @@ function SignUp() {
                 <CustomAuthLayout
                     className='h-[100vh] relative'
                 >
-                    <div className=" ">
+                    <div className="">
                         <div
                             className="text-white flex flex-col justify-center items-center gap-1 mt-8"
                         >
@@ -52,26 +134,46 @@ function SignUp() {
                         <div className="mt-[30px]">
                             <Formik<Values>
                                 initialValues={initialState}
-                                onSubmit={handleSubmit}
+                                onSubmit={(values) => handleSubmit(values)}
                                 validationSchema={signUpSchema}
                             >
                                 {() => (
                                     <Form>
                                         <div className="grid grid-cols-1 gap-5">
-                                            <CustomInput
-                                                label="Email"
-                                                id="email"
-                                                name="email"
-                                                placeholder="enter your email "
-                                                type="email"
-                                            />
                                             <div className="">
                                                 <CustomInput
-                                                    label="Password"
-                                                    id="password"
+                                                    label="First name"
+                                                    id="first_name"
+                                                    name="first_name"
+                                                    placeholder="enter your first name "
+                                                    type="text"
+                                                />
+                                            </div>
+                                            <div className="">
+                                                <CustomInput
+                                                    label="Last name"
+                                                    id="last_name"
+                                                    name="last_name"
+                                                    placeholder="enter your last name "
+                                                    type="text"
+                                                />
+                                            </div>
+                                            <div className="">
+                                                <CustomInput
+                                                    label="Email"
+                                                    id="email"
+                                                    name="email"
+                                                    placeholder="enter your email "
+                                                    type="email"
+                                                />
+                                            </div>
+                                            <div>
+                                                <CustomInput
+                                                    label="Create Password"
                                                     name="password"
-                                                    placeholder="Create password"
+                                                    id="password"
                                                     type="password"
+                                                    placeholder="create your password"
                                                 />
                                             </div>
                                             <div className="">
@@ -86,8 +188,8 @@ function SignUp() {
                                             <div className="mt-[10px]">
                                                 <CustomButton
                                                     title='Sign up'
-                                                    type='button'
-                                                    handleClick={() => { Navigate('/welcome') }}
+                                                    type='submit'
+                                                    handleClick={() => { }}
                                                     className='!w-full'
                                                 // isDisabled
                                                 />
