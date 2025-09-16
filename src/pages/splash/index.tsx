@@ -23,7 +23,7 @@ function Splash() {
             {
                 showOnboard ?
                     <div className="">
-                        <div className="flex flex-col h-[100vh]">
+                        <div className="flex flex-col ">
 
                             <div className="flex flex-col items-center mt-[100px] gap-5">
                                 <div className="">
@@ -43,10 +43,10 @@ function Splash() {
                                 </div>
                             </div>
 
-                            <div className="flex mt-auto ">
+                            <div className="flex w-full fixed bottom-0 left-0">
                                 <CustomButton
                                     title="Log in"
-                                    handleClick={() => { Navigate('/login')}}
+                                    handleClick={() => { Navigate('/login') }}
                                     className="!w-full !bg-transparent !text-[#FFDE59] !h-[50px]"
                                 />
                                 <CustomButton
@@ -55,6 +55,7 @@ function Splash() {
                                     className="!w-full rounded-none rounded-tl-4xl !h-[50px]"
                                 />
                             </div>
+
                         </div>
                     </div> :
                     <div className="flex items-center justify-center h-[100vh]">

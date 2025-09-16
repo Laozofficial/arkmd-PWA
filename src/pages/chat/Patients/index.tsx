@@ -16,7 +16,6 @@ import { getChatSessionIdAtom, getCurrentChatHistoryAtom } from '../../../recoil
 import { getLoggedUserAtom } from '../../../recoil/atom/auth'
 
 
-
 function Patients() {
 
     const navigate = useNavigate();
@@ -42,8 +41,6 @@ function Patients() {
     const getChatSessionIdValue = useRecoilValue(getChatSessionIdAtom);
 
     const getLoggedUserValue = useRecoilValue(getLoggedUserAtom);
-
-
 
     const secureUrl = (url: string) => {
         if (url !== null) {
@@ -188,7 +185,7 @@ function Patients() {
             <div className="p-5 h-screen flex flex-col relative">
 
                 <div className="relative">
-                    <div className="text-[#FFDE59] flex items-center justify-between">
+                    <div className="text-[#FFDE59] flex items-center justify-between pb-5">
                         <span
                             className='cursor-pointer'
                             onClick={() => setShowSideBar(true)}>
@@ -333,7 +330,7 @@ function Patients() {
                             value={chat}
                             onChange={(e) => setChat(e.target.value)}
                             placeholder="Talk to me..."
-                            className="bg-[#121416] w-full rounded-full pl-4 pr-12 resize-none text-white placeholder-[#B7B7B780] placeholder:text-[14px] pt-3 min-h-[50px] max-h-[120px] overflow-y-auto leading-[20px]"
+                            className="bg-[#121416] w-full rounded-full pl-4 pr-12 resize-none text-white placeholder-[#B7B7B780] placeholder:text-[14px] pt-5 min-h-[50px] max-h-[120px] overflow-y-auto leading-[20px]"
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
                                     e.preventDefault();
@@ -344,7 +341,7 @@ function Patients() {
                         {
                             !isChatLoading && !limitReached ?
                                 <div
-                                    className="absolute top-2 right-3 h-[35px] w-[35px] rounded-full bg-[#FFDE59] flex items-center justify-center cursor-pointer"
+                                    className="absolute top-3 right-3 h-[35px] w-[35px] rounded-full bg-[#FFDE59] flex items-center justify-center cursor-pointer"
                                 >
 
                                     <span onClick={() => handleChat(chat)} ><IoSend color="#121416" /></span>
@@ -364,7 +361,7 @@ function Patients() {
                 cardClassName='overflow-y-scroll'
             >
                 <div className="flex justify-end">
-                    <div className="grid grid-cols ">
+                    <div className="grid grid-cols w-[200px]">
                         <div className="py-2 bg-gray-900 rounded-t-md pl-2">
                             <p>Chat history</p>
                         </div>
@@ -381,12 +378,14 @@ function Patients() {
                                 ))
                             }
                         </div>
-                        <div
+
+                        {/* <div
                             className="flex items-center bg-[#FFDE59] text-black rounded-b-md px-5 py-2 gap-2 font-semibold cursor-pointer "
                             onClick={() => navigate('/add-patient')}
                         >
                             <p className=''>Manage chat history </p>
-                        </div>
+                        </div> */}
+
                     </div>
                 </div>
             </CustomSidBarModal>

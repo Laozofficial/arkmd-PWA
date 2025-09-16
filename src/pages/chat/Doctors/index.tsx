@@ -175,7 +175,7 @@ function Doctors() {
             <div className="p-5 h-screen flex flex-col relative bg-[#0A0A0A]">
 
                 <div className="relative">
-                    <div className="text-[#FFDE59] flex items-center justify-between">
+                    <div className="text-[#FFDE59] flex items-center justify-between pb-5">
                         <span
                             className='cursor-pointer'
                             onClick={() => setShowSideBar(true)}
@@ -327,7 +327,7 @@ function Doctors() {
                                     value={chat}
                                     onChange={(e) => setChat(e.target.value)}
                                     placeholder="Talk to me..."
-                                    className="bg-[#121416] w-full rounded-full pl-4 pr-12 resize-none text-white placeholder-[#B7B7B780] placeholder:text-[14px] pt-3 min-h-[50px] max-h-[120px] overflow-y-auto leading-[20px]"
+                                    className="bg-[#121416] w-full rounded-full pl-4 pr-12 resize-none text-white placeholder-[#B7B7B780] placeholder:text-[14px] pt-5 min-h-[50px] max-h-[120px] overflow-y-auto leading-[20px]"
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter" && !e.shiftKey) {
                                             e.preventDefault();
@@ -338,7 +338,7 @@ function Doctors() {
                                 {
                                     !isChatLoading && !limitReached ?
                                         <div
-                                            className="absolute top-2 right-3 h-[35px] w-[35px] rounded-full bg-[#FFDE59] flex items-center justify-center cursor-pointer"
+                                            className="absolute top-3 right-3 h-[35px] w-[35px] rounded-full bg-[#FFDE59] flex items-center justify-center cursor-pointer"
                                         >
 
                                             <span onClick={() => handleChat(chat)} ><IoSend color="#121416" /></span>
