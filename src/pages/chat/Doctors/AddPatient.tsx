@@ -9,6 +9,7 @@ import CustomSelect from '../../../components/atoms/CustomSelect';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa6';
 import { createNewPatient } from '../../../api/chat';
 import { IoArrowBackOutline } from 'react-icons/io5';
+import CustomLoader from '../../../components/atoms/CustomLoader';
 
 
 function AddPatient() {
@@ -68,18 +69,13 @@ function AddPatient() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 
-
-
-
     return (
         <>
-            <div className="py-10 px-5 ">
+            <div className="py-10 px-5 overflow-y-scroll h-screen  ">
                 <div className="flex flex-col items-center justify-center gap-1 relative">
                     <div
                         className="absolute top-5 left-0 cursor-pointer"

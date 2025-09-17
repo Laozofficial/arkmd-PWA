@@ -4,6 +4,7 @@ import CustomButton from "../../../components/atoms/CustomButton";
 import CustomModal from "../../../components/atoms/CustomModal";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { getPatients, removePatientById } from "../../../api/chat";
+import CustomLoader from "../../../components/atoms/CustomLoader";
 
 function ManagePatient() {
 
@@ -48,9 +49,7 @@ function ManagePatient() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 
@@ -59,7 +58,7 @@ function ManagePatient() {
 
     return (
         <>
-            <div className="py-8 px-5 w-full">
+            <div className="py-8 px-5 w-full h-full overflow-y-scroll show-scrollbar">
 
                 <div className="flex flex-col items-center justify-center gap-1 relative">
                     <div

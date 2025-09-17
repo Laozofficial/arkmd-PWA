@@ -25,6 +25,13 @@ input[type="radio"]:checked {
   background-color: #0a0a0a;
 }
 
+
+
+input[type="radio"]:checked {
+  border-color: var(--radio-checked-border, #ffde59); 
+  background-color: var(--radio-bg, #0a0a0a);
+} */
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;

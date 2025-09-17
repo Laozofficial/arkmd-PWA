@@ -6,6 +6,7 @@ import CustomButton from '../../../components/atoms/CustomButton';
 import * as yup from "yup";
 import { errorMessages } from '../../../components/shared';
 import { changePassword } from '../../../api/auth';
+import CustomLoader from '../../../components/atoms/CustomLoader';
 
 
 
@@ -51,9 +52,7 @@ function NewChangedPassword({ step }: any) {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 

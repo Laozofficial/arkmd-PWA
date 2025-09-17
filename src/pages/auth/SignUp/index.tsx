@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../../../api/auth';
 import { getLoggedUserAtom } from '../../../recoil/atom/auth';
 import { useRecoilState } from 'recoil';
+import { Country, } from "country-state-city";
+import CustomSelect from '../../../components/atoms/CustomSelect';
+import CustomLoader from '../../../components/atoms/CustomLoader';
 
 
 
@@ -18,12 +21,22 @@ function SignUp() {
     const Navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState('');
 
     const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
+
+    let countries = Country.getAllCountries().map((country) => ({
+        text: country.name,
+        value: country.isoCode,
+    }));
+
+
+
 
     interface Values {
         first_name: string,
         last_name: string,
+        country: string,
         email: string;
         password: string;
         confirm_password: string;
@@ -55,6 +68,7 @@ function SignUp() {
     const initialState = {
         first_name: "",
         last_name: "",
+        country: "",
         email: "",
         password: "",
         confirm_password: "",
@@ -88,6 +102,7 @@ function SignUp() {
         const payload = {
             first_name: values.first_name,
             last_name: values.last_name,
+            country: values.country,
             email: values.email,
             password: values.password,
             password_confirmation: values.confirm_password,
@@ -110,12 +125,9 @@ function SignUp() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
-
 
 
     return (
@@ -137,7 +149,7 @@ function SignUp() {
                                 onSubmit={(values) => handleSubmit(values)}
                                 validationSchema={signUpSchema}
                             >
-                                {() => (
+                                {({ values, setFieldValue }) => (
                                     <Form>
                                         <div className="grid grid-cols-1 gap-5">
                                             <div className="">
@@ -156,6 +168,19 @@ function SignUp() {
                                                     name="last_name"
                                                     placeholder="enter your last name "
                                                     type="text"
+                                                />
+                                            </div>
+                                            <div>
+                                                <CustomSelect
+                                                    label="Country"
+                                                    options={countries}
+                                                    name="country"
+                                                    value={selectedCountry || values.country}
+                                                    onChange={(item: { value: string; text: string }) => {
+                                                        setSelectedCountry(item.text);
+                                                        setFieldValue("country", item.text);
+                                                    }}
+                                                    placeholder='select country'
                                                 />
                                             </div>
                                             <div className="">
