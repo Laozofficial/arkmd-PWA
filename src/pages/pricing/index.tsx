@@ -40,7 +40,7 @@ function Pricing() {
                 const planB = data.filter(({ country }: any) => country !== 'nigeria');
 
                 const ngnMonthlyPlans = planA.filter((plan: any) => plan.frequency === "monthly");
-                const ngnAnnualPlans = planB.filter((plan: any) => plan.frequency === "annually");
+                const ngnAnnualPlans = planA.filter((plan: any) => plan.frequency === "annually");
 
                 setnigeriaAnnuallyPlan(ngnAnnualPlans);
                 setnigeriaMonthlyPlan(ngnMonthlyPlans);
