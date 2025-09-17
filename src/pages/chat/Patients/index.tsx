@@ -14,6 +14,7 @@ import ReactMarkdown from 'react-markdown';
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { getChatSessionIdAtom, getCurrentChatHistoryAtom } from '../../../recoil/atom/chat'
 import { getLoggedUserAtom } from '../../../recoil/atom/auth'
+import CustomLoader from '../../../components/atoms/CustomLoader'
 
 
 function Patients() {
@@ -32,6 +33,7 @@ function Patients() {
     const [previewImage, setPreviewImage] = useState('');
     const [chatSummary, setChatSummary] = useState<any>([]);
     const [limitReached, setLimitReached] = useState(false);
+    const [isNewChat, setIsNewChat] = useState(false);
 
 
     const [, setChatHistoryAtom] = useRecoilState(getCurrentChatHistoryAtom);
@@ -41,6 +43,7 @@ function Patients() {
     const getChatSessionIdValue = useRecoilValue(getChatSessionIdAtom);
 
     const getLoggedUserValue = useRecoilValue(getLoggedUserAtom);
+
 
     const secureUrl = (url: string) => {
         if (url !== null) {
@@ -97,11 +100,17 @@ function Patients() {
             if (res?.success) {
                 setChatHistoryAtom(res.data);
                 setIsChatLoading(false);
+                setIsNewChat(false);
             }
         });
     }
 
     const handleChat = (prompt: any) => {
+
+        if (getChatHistory?.length == 0) {
+            setIsNewChat(true);
+        }
+
         if (chat !== '') {
             HandleChatLimit();
             setIsChatLoading(true);
@@ -118,10 +127,11 @@ function Patients() {
                     setChat('');
                     setSelectedFile(null)
                     getChatHistory();
+                    setIsChatLoading(false);
                 }
-                setIsChatLoading(false);
             });
         } else {
+            setIsNewChat(false);
             return;
         }
     };
@@ -162,7 +172,7 @@ function Patients() {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [getChatHistoryValue, isChatLoading]);
+    }, [getChatHistoryValue, isChatLoading, getChatHistoryValue]);
 
     useEffect(() => {
         HandleChatSummary();
@@ -172,9 +182,7 @@ function Patients() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 
@@ -184,7 +192,7 @@ function Patients() {
         <>
             <div className="p-5 h-screen flex flex-col relative"> 
 
-                <div className="relative">
+                <div className="sticky top-0  z-50">
                     <div className="text-[#FFDE59] flex items-center justify-between pb-5">
                         <span
                             className='cursor-pointer'
@@ -206,7 +214,7 @@ function Patients() {
                                     src={New}
                                     alt="icon"
                                     className='h-full w-full object-cover'
-                                />  
+                                />
                             </div>
                             <div>
                                 <CustomButton
@@ -227,7 +235,7 @@ function Patients() {
 
                 </div>
                 {
-                    getChatHistoryValue?.length !== 0 ?
+                    getChatHistoryValue?.length !== 0 || isNewChat ?
                         <div
                             className="flex-1 overflow-y-auto pb-32 show-scrollbar"
                         >
@@ -361,11 +369,11 @@ function Patients() {
                 cardClassName='overflow-y-scroll'
             >
                 <div className="flex justify-end">
-                    <div className="grid grid-cols w-[200px]">
+                    <div className="grid grid-cols w-[200px] ">
                         <div className="py-2 bg-gray-900 rounded-t-md pl-2">
                             <p>Chat history</p>
                         </div>
-                        <div className="bg-[#000000]  flex flex-col pt-2 pl-2 text-[14px] pb-3 gap-3">
+                        <div className="bg-[#000000]  flex flex-col pt-2 pl-2 text-[14px] pb-3 gap-3 h-[150px] overflow-y-scroll show-scrollbar">
                             {
                                 chatSummary.map(({ userPrompt, chatSessionId }: any, index: any) => (
                                     <p

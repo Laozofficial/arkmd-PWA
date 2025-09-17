@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../../components/atoms/CustomModal';
 import Image from '../../../assets/question.png'
 import { createUserType } from '../../../api/auth';
+import CustomLoader from '../../../components/atoms/CustomLoader';
 
 
 
@@ -42,9 +43,7 @@ function WelcomePage() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 

@@ -11,6 +11,7 @@ import * as yup from "yup";
 import { loginUser } from '../../../api/auth'
 import { getLoggedUserAtom } from '../../../recoil/atom/auth'
 import { useRecoilState } from 'recoil'
+import CustomLoader from '../../../components/atoms/CustomLoader'
 // import CustomLoader from '../../../components/atoms/CustomLoader'
 
 
@@ -21,12 +22,6 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
-  
-
-  interface Values {
-    email: string;
-    password: string;
-  }
 
   const loginSchema = yup.object().shape({
     email: yup
@@ -78,9 +73,7 @@ function Login() {
 
   if (isLoading) {
     return (
-      <div className="h-[100vh] flex items-center justify-center">
-        <p>Loading....</p>
-      </div>
+      <CustomLoader />
     )
   }
 
@@ -100,12 +93,12 @@ function Login() {
               <p className='text-[13px] font-light'>Enter your details below to continue</p>
             </div>
             <div className="mt-10">
-              <Formik<Values>
+              <Formik
                 initialValues={initialState}
                 onSubmit={handleSubmit}
                 validationSchema={loginSchema}
               >
-                {() => (
+                {({ values }) => (
                   <Form>
                     <div className="grid grid-cols-1 gap-5">
                       <CustomInput
@@ -139,7 +132,7 @@ function Login() {
                           type='submit'
                           handleClick={() => { }}
                           className='!w-full'
-                        // isDisabled
+                          isDisabled={!values.email || !values.password}
                         />
                       </div>
                     </div>

@@ -8,6 +8,7 @@ import CustomButton from '../../../components/atoms/CustomButton';
 import { createPassword } from '../../../api/auth';
 import { useRecoilValue } from 'recoil';
 import { getResetStepsAtom } from '../../../recoil/atom/auth';
+import CustomLoader from '../../../components/atoms/CustomLoader';
 
 
 function NewPasword({ step }: any) {
@@ -55,11 +56,11 @@ function NewPasword({ step }: any) {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
+
+
 
 
     return (

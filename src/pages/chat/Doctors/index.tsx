@@ -14,6 +14,7 @@ import ReactMarkdown from 'react-markdown';
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { getLoggedUserAtom } from '../../../recoil/atom/auth'
 import { getChatSessionIdAtom, getCurrentChatHistoryAtom, getCurrentPatientAtom } from '../../../recoil/atom/chat'
+import CustomLoader from '../../../components/atoms/CustomLoader'
 
 
 
@@ -36,6 +37,9 @@ function Doctors() {
     const [previewImage, setPreviewImage] = useState('');
     const [patients, setPatients] = useState<any>([]);
     const [limitReached, setLimitReached] = useState(false);
+    const [isNewChat, setIsNewChat] = useState(false);
+
+
 
     const getLoggedUserValue = useRecoilValue(getLoggedUserAtom);
 
@@ -106,11 +110,17 @@ function Doctors() {
                 setShowHistory(false)
                 setChatHistoryAtom(res.data);
                 setIsLoading(false);
+                setIsNewChat(false);
             }
         });
     }
 
     const handleChat = (prompt: any) => {
+
+        if (getChatHistoryValue?.length == 0) {
+            setIsNewChat(true);
+        }
+
         if (patientId && getPatientValue && chat !== '') {
             HandleChatLimit();
             setIsChatLoading(true);
@@ -161,9 +171,7 @@ function Doctors() {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 
@@ -174,7 +182,7 @@ function Doctors() {
         <>
             <div className="p-5 h-screen flex flex-col relative bg-[#0A0A0A]">
 
-                <div className="relative">
+                <div className="sticky top-0  z-50">
                     <div className="text-[#FFDE59] flex items-center justify-between pb-5">
                         <span
                             className='cursor-pointer'
@@ -223,7 +231,7 @@ function Doctors() {
                 </div>
 
                 {
-                    getChatHistoryValue?.length !== 0 ?
+                    getChatHistoryValue?.length !== 0 || isNewChat ?
                         <div
                             className="flex-1 overflow-y-auto pb-32 show-scrollbar"
                         >
@@ -363,7 +371,7 @@ function Doctors() {
                             <div className="py-2 bg-gray-900 rounded-t-md pl-2">
                                 <p>Patient List</p>
                             </div>
-                            <div className="bg-[#000000]  flex flex-col pt-2 pl-2 text-[14px] pb-3 gap-3">
+                            <div className="bg-[#000000]  flex flex-col pt-2 pl-2 text-[14px] pb-3 gap-3 h-[150px] overflow-y-scroll show-scrollbar">
                                 {
                                     patients?.length !== 0 && (
                                         patients.map(({ name, id }: any, index: any) => (

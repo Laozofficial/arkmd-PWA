@@ -9,6 +9,7 @@ import { errorMessages } from '../../../components/shared'
 import { forgetPassword } from '../../../api/auth'
 import { getResetStepsAtom } from '../../../recoil/atom/auth'
 import { useRecoilState } from 'recoil'
+import CustomLoader from '../../../components/atoms/CustomLoader'
 
 
 
@@ -57,9 +58,7 @@ function ResetPassword({ step }: any) {
 
     if (isLoading) {
         return (
-            <div className="h-[100vh] flex items-center justify-center">
-                <p>Loading....</p>
-            </div>
+            <CustomLoader />
         )
     }
 
