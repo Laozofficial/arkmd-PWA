@@ -262,7 +262,7 @@ function Patients() {
                                         </div>
                                         <div className="flex justify-start">
                                             <div className="p-2 bg-white rounded-lg text-black max-w-[300px]">
-                                                <ReactMarkdown>{String(assistantResponse).replace(/(?<!\n)\n(?!\n)/g, '\n')}</ReactMarkdown>
+                                                <ReactMarkdown>{String(assistantResponse).replace(/(?<!\n)\n(?!\n)/g, '\n\n')}</ReactMarkdown>
                                             </div>
                                         </div>
                                         <div className="mt-3 text-[6px] opacity-40 leading-none" style={{ fontSize: '6px' }}>{new Date(createdAt).toLocaleString()}</div>
