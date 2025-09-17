@@ -261,7 +261,7 @@ function Patients() {
                                             </div>
                                         </div>
                                         <div className="flex justify-start">
-                                            <div className="p-2 bg-white rounded-lg text-black max-w-[270px] whitespace-pre-wrap">
+                                            <div className="p-2 bg-white rounded-lg text-black max-w-[300px]">
                                                 <ReactMarkdown>{String(assistantResponse).replace(/(?<!\n)\n(?!\n)/g, '\n')}</ReactMarkdown>
                                             </div>
                                         </div>
