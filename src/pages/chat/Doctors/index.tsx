@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft, FaCaretDown, FaPlus, FaRegStar, FaXmark } from 'react-icons/fa6'
-import { IoDocumentTextOutline, IoSend } from 'react-icons/io5'
+import { IoDocumentOutline, IoDocumentTextOutline, IoSend } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import CustomButton from '../../../components/atoms/CustomButton'
 import CustomSidBarModal from '../../../components/atoms/CustomSideBarModal'
@@ -16,7 +16,7 @@ import { getLoggedUserAtom } from '../../../recoil/atom/auth'
 import { getChatSessionIdAtom, getCurrentChatHistoryAtom, getCurrentPatientAtom } from '../../../recoil/atom/chat'
 import CustomLoader from '../../../components/atoms/CustomLoader'
 import { PiImageBold } from 'react-icons/pi'
-import Pdf from '../../../assets/pdfImage.png'
+
 
 
 
@@ -205,6 +205,8 @@ function Doctors() {
 
 
 
+
+
     return (
         <>
             <div className="p-5 h-screen flex flex-col relative bg-[#0A0A0A]">
@@ -262,7 +264,7 @@ function Doctors() {
                             className="flex-1 overflow-y-auto pb-32 show-scrollbar"
                         >
                             {
-                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse, createdAt, documentName, documentSize }: any, index: any) => (
+                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse, createdAt, documentName, documentSize, documentType }: any, index: any) => (
                                     <div
                                         key={index}
                                         className="mt-10 space-y-4 text-[14px]"
@@ -285,12 +287,9 @@ function Doctors() {
                                                     documentName !== null && (
                                                         <div className="bg-[#303030] rounded-md w-[200px] text-white">
                                                             <div className="flex gap-2 px-4 py-2 ">
-                                                                <div className="h-[42px] w-[32px] overflow-hidden">
-                                                                    <img
-                                                                        src={Pdf}
-                                                                        alt="pdf"
-                                                                        className='h-full w-full object-cover'
-                                                                    />
+                                                                <div className="relative">
+                                                                    <IoDocumentOutline size={48} />
+                                                                    <p className='absolute top-7 left-4.5 !text-[8px]'>{documentType !== null && documentType.toUpperCase()}</p>
                                                                 </div>
                                                                 <div>
                                                                     <p className='!text-[14px]'>{documentName}</p>
@@ -378,12 +377,9 @@ function Doctors() {
                                         </div>
                                         <div className="bg-[#303030] rounded-md w-[200px]">
                                             <div className="flex gap-2 px-4 py-2 ">
-                                                <div className="h-[40px] w-[30px] overflow-hidden">
-                                                    <img
-                                                        src={Pdf}
-                                                        alt="pdf"
-                                                        className='h-full w-full object-cover'
-                                                    />
+                                                <div className="relative">
+                                                    <IoDocumentOutline size={48} />
+                                                    <p className='absolute top-7 left-4.5 !text-[8px]'>{selectedDoc.name.split(".").pop().toUpperCase()}</p>
                                                 </div>
                                                 <div>
                                                     <p className='!text-[14px]'>{selectedDoc.name}</p>
@@ -464,7 +460,7 @@ function Doctors() {
                                 <p>Add doc</p>
                                 <input
                                     type="file"
-                                    accept=".pdf"
+                                    accept=".pdf,.docx,.doc,.txt"
                                     ref={docInputRef}
                                     onChange={handleDocChange}
                                     className="hidden"
