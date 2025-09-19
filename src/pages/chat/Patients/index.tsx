@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from '../../../components/atoms/CustomButton'
 import { FaArrowLeft, FaCaretDown, FaPlus, FaRegStar, FaXmark } from 'react-icons/fa6'
-import { IoSend } from 'react-icons/io5'
+import { IoDocumentTextOutline, IoSend } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import CustomSidBarModal from '../../../components/atoms/CustomSideBarModal'
 import Bars from '../../../assets/SidebarIcon.png'
@@ -15,6 +15,8 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { getChatSessionIdAtom, getCurrentChatHistoryAtom } from '../../../recoil/atom/chat'
 import { getLoggedUserAtom } from '../../../recoil/atom/auth'
 import CustomLoader from '../../../components/atoms/CustomLoader'
+import { PiImageBold } from 'react-icons/pi'
+import Pdf from '../../../assets/pdfImage.png'
 
 
 function Patients() {
@@ -22,7 +24,8 @@ function Patients() {
     const navigate = useNavigate();
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const fileInputRef = useRef(null);
+    const imageInputRef = useRef(null);
+    const docInputRef = useRef(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [isChatLoading, setIsChatLoading] = useState(false);
@@ -34,7 +37,9 @@ function Patients() {
     const [chatSummary, setChatSummary] = useState<any>([]);
     const [limitReached, setLimitReached] = useState(false);
     const [isNewChat, setIsNewChat] = useState(false);
+    const [showMediaModal, setShowMediaModal] = useState(false);
 
+    const [selectedDoc, setSelectedDoc] = useState(null);
 
     const [, setChatHistoryAtom] = useRecoilState(getCurrentChatHistoryAtom);
     const getChatHistoryValue = useRecoilValue(getCurrentChatHistoryAtom);
@@ -59,6 +64,15 @@ function Patients() {
         if (file) {
             setSelectedFile(file);
             setPreviewImage(URL.createObjectURL(e.target.files[0]));
+            setShowMediaModal(false);
+        }
+    }
+
+    const handleDocChange = (e: any) => {
+        const file = e.target.files[0]
+        if (file) {
+            setSelectedDoc(file);
+            setShowMediaModal(false);
         }
     }
 
@@ -121,12 +135,17 @@ function Patients() {
             if (selectedFile) {
                 formData.append("image", selectedFile);
             }
+            if (selectedDoc) {
+                formData.append("doc", selectedDoc);
+            }
 
             handleChatPrompt(formData).then((res) => {
                 if (res?.success) {
                     setChat('');
                     setSelectedFile(null)
                     getChatHistory();
+                    setSelectedDoc(null);
+                    setSelectedFile(null);
                     setIsChatLoading(false);
                 }
             });
@@ -149,10 +168,20 @@ function Patients() {
                 setShowHistory(false);
                 setChatHistoryAtom(res.data);
                 HandleChatLimit();
+                setSelectedDoc(null);
+                setSelectedFile(null);
                 setIsLoading(false);
             }
         });
     }
+
+    const convertSize = (size: any) => {
+        if (selectedDoc !== null) {
+            const newSize = size / 1048576
+            return newSize.toFixed(2);
+        }
+    }
+
 
     const logOut = () => {
         localStorage.removeItem("token");
@@ -190,7 +219,7 @@ function Patients() {
 
     return (
         <>
-            <div className="p-5 h-screen flex flex-col relative"> 
+            <div className="p-5 h-screen flex flex-col relative">
 
                 <div className="sticky top-0  z-50">
                     <div className="text-[#FFDE59] flex items-center justify-between pb-5">
@@ -240,14 +269,14 @@ function Patients() {
                             className="flex-1 overflow-y-auto pb-32 show-scrollbar"
                         >
                             {
-                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse, createdAt }: any, index: any) => (
+                                getChatHistoryValue.map(({ imageUrl, userPrompt, assistantResponse, createdAt, documentName, documentSize }: any, index: any) => (
                                     <div
                                         key={index}
                                         className="mt-10 space-y-4 text-[14px]"
                                         ref={messagesEndRef}
                                     >
                                         <div className="flex justify-end">
-                                            <div className="p-2 bg-[#121416] rounded-lg text-white max-w-[300px]">
+                                            <div className="p-2 text-black flex flex-col items-end ">
                                                 {
                                                     imageUrl !== null && (
                                                         <div className="h-[120px] w-[160px] overflow-hidden rounded-lg mb-2">
@@ -259,11 +288,32 @@ function Patients() {
                                                         </div>
                                                     )
                                                 }
-                                                <p>{userPrompt}</p>
+                                                {
+                                                    documentName !== null && (
+                                                        <div className="bg-[#303030] rounded-md w-[200px] text-white">
+                                                            <div className="flex gap-2 px-4 py-2 ">
+                                                                <div className="h-[42px] w-[32px] overflow-hidden">
+                                                                    <img
+                                                                        src={Pdf}
+                                                                        alt="pdf"
+                                                                        className='h-full w-full object-cover'
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <p className='!text-[14px]'>{documentName}</p>
+                                                                    <p className='!text-[10px] font-light'>PDF Document {documentSize}MB</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
+                                                <div className="bg-white p-2 rounded-lg max-w-[300px]">
+                                                    <p>{userPrompt}</p>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex justify-start">
-                                            <div className="p-2 bg-white rounded-lg text-black max-w-[270px] whitespace-pre-wrap">
+                                            <div className="p-2 bg-[#121416] rounded-lg text-white max-w-[270px] whitespace-pre-wrap">
                                                 <ReactMarkdown>{String(assistantResponse).replace(/(?<!\n)\n(?!\n)/g, '\n')}</ReactMarkdown>
                                             </div>
                                         </div>
@@ -318,18 +368,42 @@ function Patients() {
                             </div>
                         )
                     }
+                    {
+                        selectedDoc !== null && (
+                            <div className="w-[210px] overflow-hidden absolute bottom-24 rounded-lg ">
+                                <div className="flex justify-end mb-1 ">
+                                    <div className="h-[15px] w-[15px] flex justify-center items-center rounded-full bg-[#FFDE59]">
+                                        <span
+                                            className='cursor-pointer'
+                                            onClick={() => { setSelectedDoc(null) }}
+                                        >
+                                            <FaXmark color='#000' size={10} />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="bg-[#303030] rounded-md w-[200px]">
+                                    <div className="flex gap-2 px-4 py-2 ">
+                                        <div className="h-[40px] w-[30px] overflow-hidden">
+                                            <img
+                                                src={Pdf}
+                                                alt="pdf"
+                                                className='h-full w-full object-cover'
+                                            />
+                                        </div>
+                                        <div>
+                                            <p className='!text-[14px]'>{selectedDoc.name}</p>
+                                            <p className='!text-[10px] font-light'>PDF Document {convertSize(selectedDoc.size)}MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
                     <div
                         className="h-[50px] w-[50px] rounded-full bg-[#121416] flex items-center justify-center cursor-pointer mb-2"
-                        onClick={() => fileInputRef.current.click()}
+                        onClick={() => setShowMediaModal(true)}
                     >
                         <FaPlus color="#FFDE59" size={12} />
-                        <input
-                            type="file"
-                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.ppt,.pptx,.zip,.rar,.mp3,.wav"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
                     </div>
                     <div className="relative flex-1">
                         <textarea
@@ -361,6 +435,49 @@ function Patients() {
                 </div>
 
             </div>
+
+            <CustomSidBarModal
+                visibility={showMediaModal}
+                toggleVisibility={setShowMediaModal}
+                sideClassName='justify-start h-full ml-[40px] '
+                cardClassName='overflow-y-scroll !bg-transparent !w-[200px]'
+            >
+                <div className="flex items-center h-full">
+                    <div className="bg-[#121416] p-8 rounded">
+                        <div className="flex flex-col gap-3">
+                            <div
+                                className="flex items-center gap-3 cursor-pointer"
+                                onClick={() => imageInputRef.current.click()}
+                            >
+                                <p><PiImageBold size={18} /></p>
+                                <p>Add image</p>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={imageInputRef}
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </div>
+                            <hr className="w-full border-t border-[#ABD9F60D]" />
+                            <div
+                                className="flex items-center gap-3 cursor-pointer"
+                                onClick={() => docInputRef.current.click()}
+                            >
+                                <p><IoDocumentTextOutline size={18} /></p>
+                                <p>Add doc</p>
+                                <input
+                                    type="file"
+                                    accept=".pdf"
+                                    ref={docInputRef}
+                                    onChange={handleDocChange}
+                                    className="hidden"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </CustomSidBarModal>
 
             <CustomSidBarModal
                 visibility={showHistory}
