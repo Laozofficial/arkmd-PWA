@@ -405,6 +405,7 @@ function Patients() {
                             onChange={(e) => setChat(e.target.value)}
                             placeholder="Talk to me..."
                             className="bg-[#121416] w-full rounded-full pl-4 pr-12 resize-none text-white placeholder-[#B7B7B780] placeholder:text-[14px] pt-5 min-h-[50px] max-h-[120px] overflow-y-auto leading-[20px]"
+                            disabled={limitReached || isChatLoading}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
                                     e.preventDefault();
@@ -414,13 +415,16 @@ function Patients() {
                         />
                         {
                             !isChatLoading && !limitReached ?
-                                <div
-                                    className="absolute top-3 right-3 h-[35px] w-[35px] rounded-full bg-[#FFDE59] flex items-center justify-center cursor-pointer"
-                                >
-
+                                <div className="absolute top-3 right-3 h-[35px] w-[35px] rounded-full bg-[#FFDE59] flex items-center justify-center cursor-pointer">
                                     <span onClick={() => handleChat(chat)} ><IoSend color="#121416" /></span>
-
-                                </div> : ''
+                                </div> : 
+                                <div className="absolute top-3 right-3">
+                                    <div className="mt-5 flex space-x-1">
+                                        <span className="h-1.5 w-1.5 bg-[#FFDE59] rounded-full animate-bounce"></span>
+                                        <span className="h-1.5 w-1.5 bg-[#FFDE59] rounded-full animate-bounce [animation-delay:100ms]"></span>
+                                        <span className="h-1.5 w-1.5 bg-[#FFDE59] rounded-full animate-bounce [animation-delay:200ms]"></span>
+                                    </div>
+                                </div>
                         }
                         {/* </div> */}
                     </div>
