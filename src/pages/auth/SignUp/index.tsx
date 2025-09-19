@@ -225,7 +225,7 @@ function SignUp() {
                             </Formik >
                         </div>
                         <div className="text-white flex flex-col items-center gap-5 mt-5">
-                            <div className="flex flex-col items-center gap-2">
+                            {/* <div className="flex flex-col items-center gap-2">
                                 <p>Or</p>
                                 <p>Sign up with</p>
                             </div>
@@ -236,7 +236,7 @@ function SignUp() {
                                 <div className=" w-[30px] h-[30px] rounded-full border-[1px] border-[#E4E4E733] flex justify-center items-center">
                                     <FaGoogle size={14} color='white' />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="  ">
                                 <p>Already have an account?
                                     <span
