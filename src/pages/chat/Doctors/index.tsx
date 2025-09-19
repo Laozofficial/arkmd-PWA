@@ -442,7 +442,7 @@ function Doctors() {
                         <div className="flex flex-col gap-3">
                             <div
                                 className="flex items-center gap-3 cursor-pointer"
-                                onClick={() => imageInputRef.current.click()}
+                                onClick={() => imageInputRef?.current?.click()}
                             >
                                 <p><PiImageBold size={18} /></p>
                                 <p>Add image</p>
@@ -457,7 +457,7 @@ function Doctors() {
                             <hr className="w-full border-t border-[#ABD9F60D]" />
                             <div
                                 className="flex items-center gap-3 cursor-pointer"
-                                onClick={() => docInputRef.current.click()}
+                                onClick={() => docInputRef?.current?.click()}
                             >
                                 <p><IoDocumentTextOutline size={18} /></p>
                                 <p>Add doc</p>
