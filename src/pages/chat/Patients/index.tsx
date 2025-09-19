@@ -215,8 +215,6 @@ function Patients() {
         )
     }
 
-
-
     return (
         <>
             <div className="p-5 h-screen flex flex-col relative">

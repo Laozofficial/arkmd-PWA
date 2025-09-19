@@ -1,5 +1,5 @@
 import React from 'react'
-import Star from '../../assets/star.png'
+import Star from '../../assets/Star.png'
 import { motion } from "framer-motion";
 
 function CustomLoader() {
