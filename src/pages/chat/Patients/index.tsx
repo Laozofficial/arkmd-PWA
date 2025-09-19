@@ -380,11 +380,11 @@ function Patients() {
                                     <div className="flex gap-2 px-4 py-2 ">
                                         <div className="relative">
                                             <IoDocumentOutline size={48} />
-                                            <p className='absolute top-7 left-4.5 !text-[8px]'>{selectedDoc.name.split(".").pop().toUpperCase()}</p>
+                                            <p className='absolute top-7 left-4.5 !text-[8px]'>{selectedDoc?.name?.split(".")?.pop()?.toUpperCase()}</p>
                                         </div>
                                         <div>
-                                            <p className='!text-[14px]'>{selectedDoc.name}</p>
-                                            <p className='!text-[10px] font-light'>PDF Document {convertSize(selectedDoc.size)}MB</p>
+                                            <p className='!text-[14px]'>{selectedDoc?.name}</p>
+                                            <p className='!text-[10px] font-light'>PDF Document {convertSize(selectedDoc?.size!)}MB</p>
                                         </div>
                                     </div>
                                 </div>
@@ -439,7 +439,7 @@ function Patients() {
                         <div className="flex flex-col gap-3">
                             <div
                                 className="flex items-center gap-3 cursor-pointer"
-                                onClick={() => imageInputRef.current.click()}
+                                onClick={() => imageInputRef?.current?.click()}
                             >
                                 <p><PiImageBold size={18} /></p>
                                 <p>Add image</p>
@@ -454,7 +454,7 @@ function Patients() {
                             <hr className="w-full border-t border-[#ABD9F60D]" />
                             <div
                                 className="flex items-center gap-3 cursor-pointer"
-                                onClick={() => docInputRef.current.click()}
+                                onClick={() => docInputRef?.current?.click()}
                             >
                                 <p><IoDocumentTextOutline size={18} /></p>
                                 <p>Add doc</p>
