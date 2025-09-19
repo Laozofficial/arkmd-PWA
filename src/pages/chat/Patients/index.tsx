@@ -292,7 +292,7 @@ function Patients() {
                                                             <div className="flex gap-2 px-4 py-2 ">
                                                                 <div className="relative">
                                                                     <IoDocumentOutline size={48} />
-                                                                    <p className='absolute top-7 left-4.5 !text-[8px]'>{documentType !== null && documentType.toUpperCase()}</p>
+                                                                    <p className='absolute top-7 left-4.5 !text-[8px]'>{documentType !== null && documentType?.toUpperCase()}</p>
                                                                 </div>
                                                                 <div>
                                                                     <p className='!text-[14px]'>{documentName}</p>
@@ -312,7 +312,7 @@ function Patients() {
                                                 <ReactMarkdown>{String(assistantResponse).replace(/(?<!\n)\n(?!\n)/g, '\n')}</ReactMarkdown>
                                             </div>
                                         </div>
-                                        <div className="mt-3 text-[6px] opacity-40 leading-none" style={{ fontSize: '6px' }}>{new Date(createdAt).toLocaleString()}</div>
+                                        <div className="mt-3 text-[6px] opacity-40 leading-none" style={{ fontSize: '6px' }}>{new Date(createdAt)?.toLocaleString()}</div>
                                     </div>
                                 ))
                             }
@@ -380,7 +380,7 @@ function Patients() {
                                     <div className="flex gap-2 px-4 py-2 ">
                                         <div className="relative">
                                             <IoDocumentOutline size={48} />
-                                            <p className='absolute top-7 left-4.5 !text-[8px]'>{selectedDoc?.name?.split(".")?.pop()?.toUpperCase()}</p>
+                                            <p className='absolute top-7 left-4.5 !text-[8px]'>{selectedDoc ? selectedDoc?.name?.split(".")?.pop()?.toUpperCase() : ''}</p>
                                         </div>
                                         <div>
                                             <p className='!text-[14px]'>{selectedDoc?.name}</p>
