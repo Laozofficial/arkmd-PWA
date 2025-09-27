@@ -52,7 +52,7 @@ function WelcomePage() {
         <>
             <div className="h-full">
                 <div className="text-white flex flex-col justify-center items-center gap-1 mt-8">
-                    <p className='text-[19px] font-bold'>Welcome Fatima</p>
+                    <p className='text-[19px] font-bold'>Welcome</p>
                     <p className="text-[13px] font-light">Now one last thing...</p>
                 </div>
                 <CustomAuthLayout
