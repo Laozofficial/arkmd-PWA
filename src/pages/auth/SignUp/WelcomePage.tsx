@@ -79,8 +79,8 @@ function WelcomePage() {
                                     className="w-4 h-4 accent-yellow-500"
                                 />
                                 <div className="">
-                                    <p className="text-[16px]" >A patient</p>
-                                    <p className="text-[12px] font-light">I want to consult to get health supposrt & recommendations</p>
+                                    <p className="text-[18px]">A patient</p>
+                                    <p className="text-[10px] font-light">I want to consult to get health support & recommendations</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 rounded-xl border border-[#FFDE5933] pl-2 py-2 w-full "
@@ -99,8 +99,8 @@ function WelcomePage() {
                                     className="w-4 h-4 accent-yellow-500"
                                 />
                                 <div className="">
-                                    <p className="text-[16px]" >A doctor</p>
-                                    <p className="text-[12px] font-light">I want to consult & support patience</p>
+                                    <p className="text-[18px]">A doctor</p>
+                                    <p className="text-[10px] font-light">I want to consult & support patients</p>
                                 </div>
                             </div>
                             <div
