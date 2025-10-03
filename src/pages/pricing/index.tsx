@@ -22,7 +22,7 @@ function Pricing() {
 
     const [nigeriaMonthlyPlan, setnigeriaMonthlyPlan] = useState([]);
     const [nigeriaAnnuallyPlan, setnigeriaAnnuallyPlan] = useState([]);
-    
+
 
     const [planId, setPlanId] = useState('');
 
