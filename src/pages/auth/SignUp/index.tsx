@@ -216,7 +216,6 @@ function SignUp() {
                                                     type='submit'
                                                     handleClick={() => { }}
                                                     className='!w-full'
-                                                // isDisabled
                                                 />
                                             </div>
                                         </div>
