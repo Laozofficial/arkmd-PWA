@@ -15,3 +15,9 @@ export const getLoggedUserAtom = atom<any>({
   default: {},
   effects_UNSTABLE: [persistAtom],
 });
+
+export const getUserAtom = atom<any>({
+  key: "getUserState",
+  default: {},
+  effects_UNSTABLE: [persistAtom],
+});

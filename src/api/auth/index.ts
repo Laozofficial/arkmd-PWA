@@ -79,3 +79,32 @@ export async function createUserType(data: any) {
     );
   }
 }
+
+export async function getProfile() {
+  try {
+    const response = await api.get(`/users/profile`);
+    return response.data;
+  } catch (error: any) {
+    if (error.response.status === 401) {
+      window.location.href = "/";
+      localStorage.clear();
+    }
+  }
+}
+
+export async function updateProfile(data: any) {
+  try {
+    const response = await api.post("/users/update-profile", data);
+    return response.data;
+  } catch (error: any) {
+    if (error.response.status === 401) {
+      window.location.href = "/";
+      localStorage.clear();
+    } else {
+      CustomNotification(
+        "error",
+        error.response.data.message || "Something went wrong"
+      );
+    }
+  }
+}
