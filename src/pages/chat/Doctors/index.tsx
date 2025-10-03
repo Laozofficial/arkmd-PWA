@@ -67,6 +67,12 @@ function Doctors() {
         { name: 'Noah', value: 'noah', desc: 'Medical knowledge AI', premium: true, border: '#13A1F933' },
     ]
 
+    const highlightText = (text: string) => {
+        return text
+            .replace(/@elijah/g, '<span style="color:#05F01D">@elijah</span>')
+            .replace(/@gray/g, '<span style="color:#FFDE59">@gray</span>')
+            .replace(/@noah/g, '<span style="color:#13A1F9">@noah</span>');
+    };
 
     const secureUrl = (url: string) => {
         if (url !== null) {
@@ -196,6 +202,8 @@ function Doctors() {
         setChatHistoryAtom([]);
         navigate('/login');
     };
+
+
 
 
     useEffect(() => {
@@ -534,6 +542,10 @@ function Doctors() {
                                 <FaPlus color="#FFDE59" size={12} />
                             </div>
                             <div className="relative flex-1">
+                                <div
+                                    className="absolute top-0 left-0 w-full rounded-full pl-4 pr-12 pt-5 min-h-[50px] max-h-[120px] overflow-y-auto leading-[20px] whitespace-pre-wrap pointer-events-none text-white"
+                                    dangerouslySetInnerHTML={{ __html: highlightText(chat) }}
+                                />
                                 <textarea
                                     name="chat"
                                     id="chat"
