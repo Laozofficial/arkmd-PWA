@@ -18,3 +18,9 @@ export const getCurrentChatHistoryAtom = atom<any>({
   default: [],
   effects_UNSTABLE: [persistAtom],
 });
+
+export const getCurrentAiAtom = atom<any>({
+  key: "getCurrentAiState",
+  default: [],
+  effects_UNSTABLE: [persistAtom],
+});

@@ -55,8 +55,6 @@ function Pricing() {
     }
 
 
-    console.log();
-
     const fetchUserPlans = () => {
         setIsLoading(true);
         getUserPlan().then((res) => {

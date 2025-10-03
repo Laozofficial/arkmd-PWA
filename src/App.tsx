@@ -12,6 +12,8 @@ import Pricing from './pages/pricing'
 import ManagePatient from './pages/chat/Doctors/ManagePatient'
 import ChangePassword from './pages/auth/ChangePassword.tsx'
 import Error from '../src/pages/Error'
+import Profile from './pages/profile'
+import EditProfile from './pages/profile/EditProfile'
 
 
 
@@ -32,6 +34,8 @@ function App() {
         <Route path="/add-patient" element={<AddPatient />} />
         <Route path="/manage-patient" element={<ManagePatient />} />
         <Route path="/price" element={<Pricing />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
 
 
 
