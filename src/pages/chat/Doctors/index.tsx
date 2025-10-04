@@ -152,6 +152,8 @@ function Doctors() {
                 localStorage.setItem("patient_id", id);
                 setShowHistory(false)
                 setChatHistoryAtom(res.data);
+                // Persist chat history in localStorage by patient id
+                localStorage.setItem(`doctorChatHistory_${id}`, JSON.stringify(res.data));
                 setIsLoading(false);
                 setIsNewChat(false);
             }
@@ -209,6 +211,17 @@ function Doctors() {
     useEffect(() => {
         if (savedId) {
             setChatSessionAtom(savedId);
+            // Try to load chat history from localStorage for this patient
+            if (patientId) {
+                const localHistory = localStorage.getItem(`doctorChatHistory_${patientId}`);
+                if (localHistory) {
+                    try {
+                        setChatHistoryAtom(JSON.parse(localHistory));
+                    } catch (e) {
+                        // ignore parse error
+                    }
+                }
+            }
         } else {
             generateId();
         }

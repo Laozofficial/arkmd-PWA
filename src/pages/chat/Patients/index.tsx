@@ -142,6 +142,10 @@ function Patients() {
         getChatHistoryById(getChatSessionIdValue).then((res) => {
             if (res?.success) {
                 setChatHistoryAtom(res.data);
+                // Persist chat history in localStorage by session id
+                if (getChatSessionIdValue) {
+                    localStorage.setItem(`chatHistory_${getChatSessionIdValue}`, JSON.stringify(res.data));
+                }
                 setIsChatLoading(false);
                 setIsNewChat(false);
             }
@@ -223,6 +227,15 @@ function Patients() {
         const savedId = localStorage.getItem("session_id");
         if (savedId) {
             setChatSessionAtom(savedId);
+            // Try to load chat history from localStorage for this session
+            const localHistory = localStorage.getItem(`chatHistory_${savedId}`);
+            if (localHistory) {
+                try {
+                    setChatHistoryAtom(JSON.parse(localHistory));
+                } catch (e) {
+                    // ignore parse error
+                }
+            }
         } else {
             generateId();
         }
