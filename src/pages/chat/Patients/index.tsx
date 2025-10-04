@@ -371,13 +371,22 @@ function Patients() {
                                                     )}
 
                                                     <div className="bg-white p-2 rounded-lg max-w-[300px]">
-                                                        <p>{userPrompt}</p>
+                                                        <p className=' text-[14px]'>
+                                                             <span
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: userPrompt
+                                                                        .replace(/@elijah/g, '<span style="color:#05F01D;font-weight:bold">@elijah</span>')
+                                                                        .replace(/@gray/g, '<span style="color:#FFDE59;font-weight:bold">@gray</span>')
+                                                                        .replace(/@noah/g, '<span style="color:#13A1F9;font-weight:bold">@noah</span>')
+                                                                }}
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="flex justify-start">
-                                                <div className="p-2 bg-[#121416] rounded-lg text-white max-w-[270px] whitespace-pre-wrap">
+                                                <div className="p-2 bg-[#121416] rounded-lg text-white max-w-[300px] whitespace-pre-wrap text-[14px]">
                                                     <ReactMarkdown>
                                                         {String(assistantResponse).replace(
                                                             /(?<!\n)\n(?!\n)/g,
@@ -385,10 +394,10 @@ function Patients() {
                                                         )}
                                                     </ReactMarkdown>
                                                     <div
-                                                        className="mb-2 text-[6px] opacity-40 leading-none"
-                                                        style={{ fontSize: "6px" }}
+                                                        className="mb-2 text-[10px] opacity-40 leading-none mt-4"
+                                                        style={{ fontSize: "10px" }}
                                                     >
-                                                        {new Date(createdAt)?.toLocaleString()}
+                                                        {new Date(createdAt)?.toLocaleString()?.toLowerCase()}
                                                     </div>
                                                 </div>
                                             </div>
@@ -402,7 +411,7 @@ function Patients() {
                                             >
                                                 {model && (
                                                     <div className="flex items-center justify-center gap-1">
-                                                        <p>{model.charAt(0).toUpperCase() + model.slice(1)}</p>
+                                                        <p>{model.charAt(0).toLowerCase() + model.slice(1)}</p>
                                                         <PiStarFourFill size={10} />
                                                     </div>
                                                 )}
