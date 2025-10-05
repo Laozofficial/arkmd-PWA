@@ -37,6 +37,53 @@ function Patients() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [chatSummary, setChatSummary] = useState<any>([]);
+
+    // IndexedDB helpers for chat summary
+    const CHAT_SUMMARY_DB = 'arkmdChatSummaryDB';
+    const CHAT_SUMMARY_STORE = 'chatSummary';
+
+    // Save chat summary to IndexedDB
+    const saveChatSummaryToIndexedDB = (summary: any) => {
+        const request = window.indexedDB.open(CHAT_SUMMARY_DB, 1);
+        request.onupgradeneeded = function (event) {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(CHAT_SUMMARY_STORE)) {
+                db.createObjectStore(CHAT_SUMMARY_STORE);
+            }
+        };
+        request.onsuccess = function (event) {
+            const db = request.result;
+            const tx = db.transaction(CHAT_SUMMARY_STORE, 'readwrite');
+            const store = tx.objectStore(CHAT_SUMMARY_STORE);
+            store.put(summary, 'summary');
+            tx.oncomplete = function () {
+                db.close();
+            };
+        };
+    };
+
+    // Load chat summary from IndexedDB
+    const loadChatSummaryFromIndexedDB = () => {
+        const request = window.indexedDB.open(CHAT_SUMMARY_DB, 1);
+        request.onupgradeneeded = function (event) {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(CHAT_SUMMARY_STORE)) {
+                db.createObjectStore(CHAT_SUMMARY_STORE);
+            }
+        };
+        request.onsuccess = function (event) {
+            const db = request.result;
+            const tx = db.transaction(CHAT_SUMMARY_STORE, 'readonly');
+            const store = tx.objectStore(CHAT_SUMMARY_STORE);
+            const getReq = store.get('summary');
+            getReq.onsuccess = function () {
+                if (getReq.result) {
+                    setChatSummary(getReq.result);
+                }
+                db.close();
+            };
+        };
+    };
     const [limitReached, setLimitReached] = useState(false);
     const [isNewChat, setIsNewChat] = useState(false);
     const [showMediaModal, setShowMediaModal] = useState(false);
@@ -121,7 +168,8 @@ function Patients() {
     const HandleChatSummary = () => {
         getChatSummary().then((res) => {
             if (res?.success) {
-                setChatSummary(res.data)
+                setChatSummary(res.data);
+                saveChatSummaryToIndexedDB(res.data);
             }
         });
     }
@@ -248,6 +296,7 @@ function Patients() {
     }, [getChatHistoryValue, isChatLoading, getChatHistoryValue]);
 
     useEffect(() => {
+        loadChatSummaryFromIndexedDB();
         HandleChatSummary();
         HandleChatLimit();
     }, [])
