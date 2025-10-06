@@ -42,6 +42,53 @@ function Patients() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [chatSummary, setChatSummary] = useState<any>([]);
+
+    // IndexedDB helpers for chat summary
+    const CHAT_SUMMARY_DB = 'arkmdChatSummaryDB';
+    const CHAT_SUMMARY_STORE = 'chatSummary';
+
+    // Save chat summary to IndexedDB
+    const saveChatSummaryToIndexedDB = (summary: any) => {
+        const request = window.indexedDB.open(CHAT_SUMMARY_DB, 1);
+        request.onupgradeneeded = function (event) {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(CHAT_SUMMARY_STORE)) {
+                db.createObjectStore(CHAT_SUMMARY_STORE);
+            }
+        };
+        request.onsuccess = function (event) {
+            const db = request.result;
+            const tx = db.transaction(CHAT_SUMMARY_STORE, 'readwrite');
+            const store = tx.objectStore(CHAT_SUMMARY_STORE);
+            store.put(summary, 'summary');
+            tx.oncomplete = function () {
+                db.close();
+            };
+        };
+    };
+
+    // Load chat summary from IndexedDB
+    const loadChatSummaryFromIndexedDB = () => {
+        const request = window.indexedDB.open(CHAT_SUMMARY_DB, 1);
+        request.onupgradeneeded = function (event) {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(CHAT_SUMMARY_STORE)) {
+                db.createObjectStore(CHAT_SUMMARY_STORE);
+            }
+        };
+        request.onsuccess = function (event) {
+            const db = request.result;
+            const tx = db.transaction(CHAT_SUMMARY_STORE, 'readonly');
+            const store = tx.objectStore(CHAT_SUMMARY_STORE);
+            const getReq = store.get('summary');
+            getReq.onsuccess = function () {
+                if (getReq.result) {
+                    setChatSummary(getReq.result);
+                }
+                db.close();
+            };
+        };
+    };
     const [limitReached, setLimitReached] = useState(false);
     const [isNewChat, setIsNewChat] = useState(false);
     const [showMediaModal, setShowMediaModal] = useState(false);
@@ -170,7 +217,8 @@ function Patients() {
     const HandleChatSummary = () => {
         getChatSummary().then((res) => {
             if (res?.success) {
-                setChatSummary(res.data)
+                setChatSummary(res.data);
+                saveChatSummaryToIndexedDB(res.data);
             }
         });
     }
@@ -191,6 +239,10 @@ function Patients() {
         getChatHistoryById(getChatSessionIdValue).then((res) => {
             if (res?.success) {
                 setChatHistoryAtom(res.data);
+                // Persist chat history in localStorage by session id
+                if (getChatSessionIdValue) {
+                    localStorage.setItem(`chatHistory_${getChatSessionIdValue}`, JSON.stringify(res.data));
+                }
                 setIsChatLoading(false);
                 setIsNewChat(false);
             }
@@ -272,6 +324,15 @@ function Patients() {
         const savedId = localStorage.getItem("session_id");
         if (savedId) {
             setChatSessionAtom(savedId);
+            // Try to load chat history from localStorage for this session
+            const localHistory = localStorage.getItem(`chatHistory_${savedId}`);
+            if (localHistory) {
+                try {
+                    setChatHistoryAtom(JSON.parse(localHistory));
+                } catch (e) {
+                    // ignore parse error
+                }
+            }
         } else {
             generateId();
         }
@@ -284,7 +345,7 @@ function Patients() {
     }, [getChatHistoryValue, isChatLoading, getChatHistoryValue]);
 
     useEffect(() => {
-        fetchUserPlans();
+        loadChatSummaryFromIndexedDB();
         HandleChatSummary();
         HandleChatLimit();
         typeCheck(getLoggedUserValue.type)
@@ -422,13 +483,22 @@ function Patients() {
                                                     )}
 
                                                     <div className="bg-white p-2 rounded-lg max-w-[300px]">
-                                                        <p>{userPrompt}</p>
+                                                        <p className=' text-[14px]'>
+                                                             <span
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: userPrompt
+                                                                        .replace(/@elijah/g, '<span style="color:#05F01D;font-weight:bold">@elijah</span>')
+                                                                        .replace(/@gray/g, '<span style="color:#FFDE59;font-weight:bold">@gray</span>')
+                                                                        .replace(/@noah/g, '<span style="color:#13A1F9;font-weight:bold">@noah</span>')
+                                                                }}
+                                                            />
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="flex justify-start">
-                                                <div className="p-2 bg-[#121416] rounded-lg text-white max-w-[270px] whitespace-pre-wrap">
+                                                <div className="p-2 bg-[#121416] rounded-lg text-white max-w-[300px] whitespace-pre-wrap text-[14px]">
                                                     <ReactMarkdown>
                                                         {String(assistantResponse).replace(
                                                             /(?<!\n)\n(?!\n)/g,
@@ -436,10 +506,10 @@ function Patients() {
                                                         )}
                                                     </ReactMarkdown>
                                                     <div
-                                                        className="mb-2 text-[6px] opacity-40 leading-none"
-                                                        style={{ fontSize: "6px" }}
+                                                        className="mb-2 text-[10px] opacity-40 leading-none mt-4"
+                                                        style={{ fontSize: "10px" }}
                                                     >
-                                                        {new Date(createdAt)?.toLocaleString()}
+                                                        {new Date(createdAt)?.toLocaleString()?.toLowerCase()}
                                                     </div>
                                                 </div>
                                             </div>
@@ -453,7 +523,7 @@ function Patients() {
                                             >
                                                 {model && (
                                                     <div className="flex items-center justify-center gap-1">
-                                                        <p>{model.charAt(0).toUpperCase() + model.slice(1)}</p>
+                                                        <p>{model.charAt(0).toLowerCase() + model.slice(1)}</p>
                                                         <PiStarFourFill size={10} />
                                                     </div>
                                                 )}

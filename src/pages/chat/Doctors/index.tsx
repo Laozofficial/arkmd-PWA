@@ -47,6 +47,53 @@ function Doctors() {
     const [selectedDoc, setSelectedDoc] = useState(null);
 
     const [patients, setPatients] = useState<any>([]);
+
+    // IndexedDB helpers for patients list (chat summary)
+    const PATIENTS_DB = 'arkmdPatientsDB';
+    const PATIENTS_STORE = 'patients';
+
+    // Save patients to IndexedDB
+    const savePatientsToIndexedDB = (list: any) => {
+        const request = window.indexedDB.open(PATIENTS_DB, 1);
+        request.onupgradeneeded = function () {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(PATIENTS_STORE)) {
+                db.createObjectStore(PATIENTS_STORE);
+            }
+        };
+        request.onsuccess = function () {
+            const db = request.result;
+            const tx = db.transaction(PATIENTS_STORE, 'readwrite');
+            const store = tx.objectStore(PATIENTS_STORE);
+            store.put(list, 'list');
+            tx.oncomplete = function () {
+                db.close();
+            };
+        };
+    };
+
+    // Load patients from IndexedDB
+    const loadPatientsFromIndexedDB = () => {
+        const request = window.indexedDB.open(PATIENTS_DB, 1);
+        request.onupgradeneeded = function () {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(PATIENTS_STORE)) {
+                db.createObjectStore(PATIENTS_STORE);
+            }
+        };
+        request.onsuccess = function () {
+            const db = request.result;
+            const tx = db.transaction(PATIENTS_STORE, 'readonly');
+            const store = tx.objectStore(PATIENTS_STORE);
+            const getReq = store.get('list');
+            getReq.onsuccess = function () {
+                if (getReq.result) {
+                    setPatients(getReq.result);
+                }
+                db.close();
+            };
+        };
+    };
     const [limitReached, setLimitReached] = useState(false);
     const [isNewChat, setIsNewChat] = useState(false);
     const [showMediaModal, setShowMediaModal] = useState(false);
@@ -187,7 +234,8 @@ function Doctors() {
     const fetchAllPatients = () => {
         getPatients().then((res) => {
             if (res?.success) {
-                setPatients(res.data)
+                setPatients(res.data);
+                savePatientsToIndexedDB(res.data);
             }
         });
     }
@@ -199,7 +247,8 @@ function Doctors() {
                 localStorage.setItem("patient_id", id);
                 setShowHistory(false)
                 setChatHistoryAtom(res.data);
-                setShowAi(true);
+                // Persist chat history in localStorage by patient id
+                localStorage.setItem(`doctorChatHistory_${id}`, JSON.stringify(res.data));
                 setIsLoading(false);
                 setIsNewChat(false);
             }
@@ -256,6 +305,17 @@ function Doctors() {
     useEffect(() => {
         if (savedId) {
             setChatSessionAtom(savedId);
+            // Try to load chat history from localStorage for this patient
+            if (patientId) {
+                const localHistory = localStorage.getItem(`doctorChatHistory_${patientId}`);
+                if (localHistory) {
+                    try {
+                        setChatHistoryAtom(JSON.parse(localHistory));
+                    } catch (e) {
+                        // ignore parse error
+                    }
+                }
+            }
         } else {
             generateId();
         }
@@ -268,7 +328,7 @@ function Doctors() {
     }, [getChatHistoryValue, isChatLoading]);
 
     useEffect(() => {
-        fetchUserPlans();
+        loadPatientsFromIndexedDB();
         fetchAllPatients();
         HandleChatLimit();
         typeCheck(getLoggedUserValue.type)
