@@ -5,7 +5,6 @@ import { Form, Formik } from 'formik'
 import { errorMessages } from '../../../components/shared';
 import * as yup from "yup";
 import CustomAuthLayout from '../../../components/atoms/CustomAuthLayout';
-import { FaApple, FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../../../api/auth';
 import { getLoggedUserAtom } from '../../../recoil/atom/auth';
@@ -25,7 +24,7 @@ function SignUp() {
 
     const [, setLoggedUserAtom] = useRecoilState(getLoggedUserAtom);
 
-    let countries = Country.getAllCountries().map((country) => ({
+    const countries = Country.getAllCountries().map((country) => ({
         text: country.name,
         value: country.isoCode,
     }));
