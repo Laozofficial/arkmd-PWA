@@ -328,6 +328,7 @@ function Doctors() {
     }, [getChatHistoryValue, isChatLoading]);
 
     useEffect(() => {
+        fetchUserPlans();
         loadPatientsFromIndexedDB();
         fetchAllPatients();
         HandleChatLimit();

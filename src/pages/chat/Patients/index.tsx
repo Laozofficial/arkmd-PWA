@@ -345,6 +345,7 @@ function Patients() {
     }, [getChatHistoryValue, isChatLoading, getChatHistoryValue]);
 
     useEffect(() => {
+        fetchUserPlans();
         loadChatSummaryFromIndexedDB();
         HandleChatSummary();
         HandleChatLimit();
@@ -484,7 +485,7 @@ function Patients() {
 
                                                     <div className="bg-white p-2 rounded-lg max-w-[300px]">
                                                         <p className=' text-[14px]'>
-                                                             <span
+                                                            <span
                                                                 dangerouslySetInnerHTML={{
                                                                     __html: userPrompt
                                                                         .replace(/@elijah/g, '<span style="color:#05F01D;font-weight:bold">@elijah</span>')
