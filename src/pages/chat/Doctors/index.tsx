@@ -12,12 +12,15 @@ import Users from '../../../assets/Usersicon.png'
 import { generateSessionId, getChatLimit, getPatientChatById, getPatients, handleChatPrompt } from '../../../api/chat'
 import ReactMarkdown from 'react-markdown';
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { getLoggedUserAtom } from '../../../recoil/atom/auth'
-import { getChatSessionIdAtom, getCurrentAiAtom, getCurrentChatHistoryAtom, getCurrentPatientAtom } from '../../../recoil/atom/chat'
+import { getLoggedUserAtom, getNewUserRoleAtom } from '../../../recoil/atom/auth'
+import { getChatSessionIdAtom, getCurrentChatHistoryAtom, getCurrentPatientAtom } from '../../../recoil/atom/chat'
 import CustomLoader from '../../../components/atoms/CustomLoader'
 import { PiImageBold, PiStarFourFill } from 'react-icons/pi'
 import { HiOutlineUser } from 'react-icons/hi'
 import moment from 'moment'
+import { CustomNotification } from '../../../components/atoms/CustomNotification'
+import { getCurrentPlanAtom } from '../../../recoil/atom/price'
+import { getUserPlan } from '../../../api/payment'
 
 
 
@@ -61,11 +64,41 @@ function Doctors() {
     const [, setPatientAtom] = useRecoilState(getCurrentPatientAtom);
     const getPatientValue = useRecoilValue(getCurrentPatientAtom);
 
+    const getCurrentPlanValue = useRecoilValue(getCurrentPlanAtom);
+
+    const getNewUserRoleValue = useRecoilValue(getNewUserRoleAtom);
+
+    const [, setCurrentPlanAtom] = useRecoilState(getCurrentPlanAtom);
+
     const aiOptions = [
         { name: 'Elijah', value: 'elijah', desc: 'Pharmacist AI', premium: true, border: '#05F01D33' },
         { name: 'Gray', value: 'gray', desc: 'Diagnosis AI', premium: false, border: '#FFDE5933' },
         { name: 'Noah', value: 'noah', desc: 'Medical knowledge AI', premium: true, border: '#13A1F933' },
     ]
+
+    const typeCheck = (type: any) => {
+        const userType = location.pathname.slice(1);
+        if (getLoggedUserValue.type !== (userType || getNewUserRoleValue)) {
+            navigate(`/${type || getNewUserRoleValue}`)
+        } else {
+            return;
+        }
+    }
+
+    const subscriptionCheck = (model: any) => {
+
+        if (getCurrentPlanValue == null && model !== 'gray') {
+            CustomNotification(
+                "error",
+                "Only available for paid subscribers"
+            );
+            setShowAi(false);
+            return;
+        } else {
+            setChat((prev: any) => prev.replace(/@$/, "") + `@${model} `);
+            setShowAiOptions(false);
+        }
+    }
 
     const highlightText = (text: string) => {
         return text
@@ -98,6 +131,20 @@ function Doctors() {
             setSelectedDoc(file);
             setShowMediaModal(false);
         }
+    }
+
+    const fetchUserPlans = () => {
+        setIsLoading(true);
+        getUserPlan().then((res) => {
+            if (res?.success) {
+                setCurrentPlanAtom(res.data)
+                setIsLoading(false);
+
+            } else {
+                setIsLoading(false);
+                return;
+            }
+        });
     }
 
     const handleChatChange = (e: any) => {
@@ -152,6 +199,7 @@ function Doctors() {
                 localStorage.setItem("patient_id", id);
                 setShowHistory(false)
                 setChatHistoryAtom(res.data);
+                setShowAi(true);
                 setIsLoading(false);
                 setIsNewChat(false);
             }
@@ -205,7 +253,6 @@ function Doctors() {
 
 
 
-
     useEffect(() => {
         if (savedId) {
             setChatSessionAtom(savedId);
@@ -221,9 +268,14 @@ function Doctors() {
     }, [getChatHistoryValue, isChatLoading]);
 
     useEffect(() => {
+        fetchUserPlans();
         fetchAllPatients();
         HandleChatLimit();
+        typeCheck(getLoggedUserValue.type)
     }, [])
+
+
+
 
 
     if (isLoading) {
@@ -231,6 +283,7 @@ function Doctors() {
             <CustomLoader />
         )
     }
+
 
 
 
@@ -443,11 +496,7 @@ function Doctors() {
                                                     <div
                                                         key={index}
                                                         className='cursor-pointer'
-                                                        onClick={() => {
-                                                            setChat((prev: any) => prev.replace(/@$/, "") + `@${value} `);
-                                                            setShowAiOptions(false);
-                                                        }}
-
+                                                        onClick={() => { subscriptionCheck(value) }}
                                                     >
                                                         {premium && (
                                                             <span>

@@ -21,3 +21,9 @@ export const getUserAtom = atom<any>({
   default: {},
   effects_UNSTABLE: [persistAtom],
 });
+
+export const getNewUserRoleAtom = atom<any>({
+  key: "getNewUserRoleState",
+  default: {},
+  effects_UNSTABLE: [persistAtom],
+});

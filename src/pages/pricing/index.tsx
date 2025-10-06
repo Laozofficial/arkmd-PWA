@@ -4,9 +4,10 @@ import { IoArrowBackOutline, IoCheckmarkSharp } from 'react-icons/io5';
 import { getAllPlan, getUserPlan } from '../../api/payment';
 import CustomButton from '../../components/atoms/CustomButton';
 import { usePaystackPayment } from 'react-paystack';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { getLoggedUserAtom } from '../../recoil/atom/auth';
 import CustomLoader from '../../components/atoms/CustomLoader';
+import { getCurrentPlanAtom } from '../../recoil/atom/price';
 
 
 
@@ -27,6 +28,8 @@ function Pricing() {
     const [planId, setPlanId] = useState('');
 
     const [isAnnual, setIsAnnual] = useState(false);
+
+    const [, setCurrentPlanAtom] = useRecoilState(getCurrentPlanAtom);
 
     const userEmailValue = useRecoilValue(getLoggedUserAtom);
 
@@ -59,6 +62,7 @@ function Pricing() {
         setIsLoading(true);
         getUserPlan().then((res) => {
             if (res?.success) {
+                setCurrentPlanAtom(res.data)
                 if (res.data == null) {
                     setSelected('free');
                 } else {

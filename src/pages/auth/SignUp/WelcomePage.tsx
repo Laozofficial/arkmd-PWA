@@ -4,27 +4,31 @@ import CustomButton from '../../../components/atoms/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../../components/atoms/CustomModal';
 import Image from '../../../assets/question.png'
-import { createUserType } from '../../../api/auth';
+import { createUserType, } from '../../../api/auth';
 import CustomLoader from '../../../components/atoms/CustomLoader';
+import { useRecoilState } from 'recoil';
+import { getNewUserRoleAtom } from '../../../recoil/atom/auth';
+
 
 
 
 function WelcomePage() {
 
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
-
     const [role, setRole] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
+    const [, setUserRoleAtom] = useRecoilState(getNewUserRoleAtom);
 
     const storeUserType = (type: any) => {
         createUserType({ type: type }).then((res) => {
             setIsLoading(true);
             if (res?.success) {
+                setUserRoleAtom(type)
                 setIsLoading(false);
-                Navigate(`/${type}`);
+                navigate(`/${type}`);
             } else {
                 setIsLoading(false);
             }

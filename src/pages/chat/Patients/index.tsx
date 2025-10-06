@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from '../../../components/atoms/CustomButton'
 import { FaArrowLeft, FaCaretDown, FaCaretUp, FaCrown, FaPlus, FaRegStar, FaXmark } from 'react-icons/fa6'
 import { IoDocumentOutline, IoDocumentTextOutline, IoSend } from 'react-icons/io5'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import CustomSidBarModal from '../../../components/atoms/CustomSideBarModal'
 import Bars from '../../../assets/SidebarIcon.png'
 import New from '../../../assets/edit.png'
@@ -12,18 +12,23 @@ import Logo from '../../../assets/arkmd-logo.png'
 import { generateSessionId, getChatHistoryById, getChatLimit, getChatSummary, handleChatPrompt } from '../../../api/chat'
 import ReactMarkdown from 'react-markdown';
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { getChatSessionIdAtom, getCurrentAiAtom, getCurrentChatHistoryAtom } from '../../../recoil/atom/chat'
-import { getLoggedUserAtom } from '../../../recoil/atom/auth'
+import { getChatSessionIdAtom, getCurrentChatHistoryAtom } from '../../../recoil/atom/chat'
+import { getLoggedUserAtom, getNewUserRoleAtom } from '../../../recoil/atom/auth'
 import CustomLoader from '../../../components/atoms/CustomLoader'
 import { PiImageBold, PiStarFourFill } from 'react-icons/pi'
 import { HiOutlineUser } from 'react-icons/hi'
 import moment from 'moment'
+import { CustomNotification } from '../../../components/atoms/CustomNotification'
+import { getCurrentPlanAtom } from '../../../recoil/atom/price'
+import { getUserPlan } from '../../../api/payment'
+
 
 
 
 function Patients() {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const imageInputRef = useRef(null);
@@ -53,11 +58,41 @@ function Patients() {
 
     const getLoggedUserValue = useRecoilValue(getLoggedUserAtom);
 
+    const getCurrentPlanValue = useRecoilValue(getCurrentPlanAtom);
+
+    const getNewUserRoleValue = useRecoilValue(getNewUserRoleAtom);
+
+    const [, setCurrentPlanAtom] = useRecoilState(getCurrentPlanAtom);
+
     const aiOptions = [
         { name: 'Elijah', value: 'elijah', desc: 'Pharmacist AI', premium: true, border: '#05F01D33', },
         { name: 'Gray', value: 'gray', desc: 'Diagnosis AI', premium: false, border: '#FFDE5933', },
         { name: 'Noah', value: 'noah', desc: 'Medical knowledge AI', premium: true, border: '#13A1F933', },
     ];
+
+    const typeCheck = (type: any) => {
+        const userType = location.pathname.slice(1);
+        if (getLoggedUserValue.type !== (userType || getNewUserRoleValue)) {
+            navigate(`/${type || getNewUserRoleValue}`)
+        } else {
+            return;
+        }
+    }
+
+    const subscriptionCheck = (model: any) => {
+
+        if (getCurrentPlanValue == null && model !== 'gray') {
+            CustomNotification(
+                "error",
+                "Only available for paid subscribers"
+            );
+            setShowAi(false);
+            return;
+        } else {
+            setChat((prev: any) => prev.replace(/@$/, "") + `@${model} `);
+            setShowAiOptions(false);
+        }
+    }
 
     const highlightText = (text: string) => {
         return text
@@ -90,6 +125,20 @@ function Patients() {
             setSelectedDoc(file);
             setShowMediaModal(false);
         }
+    }
+
+    const fetchUserPlans = () => {
+        setIsLoading(true);
+        getUserPlan().then((res) => {
+            if (res?.success) {
+                setCurrentPlanAtom(res.data)
+                setIsLoading(false);
+
+            } else {
+                setIsLoading(false);
+                return;
+            }
+        });
     }
 
     const handleChatChange = (e: any) => {
@@ -235,8 +284,10 @@ function Patients() {
     }, [getChatHistoryValue, isChatLoading, getChatHistoryValue]);
 
     useEffect(() => {
+        fetchUserPlans();
         HandleChatSummary();
         HandleChatLimit();
+        typeCheck(getLoggedUserValue.type)
     }, [])
 
     if (isLoading) {
@@ -448,11 +499,7 @@ function Patients() {
                                             <div
                                                 key={index}
                                                 className='cursor-pointer'
-                                                onClick={() => {
-                                                    setChat((prev: any) => prev.replace(/@$/, "") + `@${value} `);
-                                                    setShowAiOptions(false);
-                                                }}
-
+                                                onClick={() => { subscriptionCheck(value) }}
                                             >
                                                 {premium && (
                                                     <span>

@@ -1,5 +1,5 @@
 
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import SignUp from './pages/auth/SignUp'
 import Splash from './pages/splash'
 import WelcomePage from './pages/auth/SignUp/WelcomePage'
@@ -18,8 +18,10 @@ import EditProfile from './pages/profile/EditProfile'
 
 
 
-
 function App() {
+
+
+
   return (
     <>
       <Routes>
@@ -36,8 +38,6 @@ function App() {
         <Route path="/price" element={<Pricing />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
-
-
 
         <Route path="*" element={<Error />} />
       </Routes>
