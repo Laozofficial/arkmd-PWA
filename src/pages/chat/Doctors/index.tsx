@@ -352,13 +352,13 @@ function Doctors() {
         <>
             <div className="p-5 h-screen flex flex-col relative bg-[#0A0A0A]">
 
-                <div className="sticky top-0  z-50">
+                <div className="sticky top-0  z-50 "  style={{ marginTop: '10px' }}>
                     <div className="text-[#FFDE59] flex items-center justify-between pb-5">
                         <span
                             className='cursor-pointer'
                             onClick={() => setShowSideBar(true)}
                         >
-                            <div className="h-[8px] w-[15px] overflow-hidden">
+                            <div className="h-[8px] w-[25px] overflow-hidden">
                                 <img
                                     src={Bars}
                                     alt="icon"
@@ -432,10 +432,10 @@ function Doctors() {
                                                 <div className="flex items-center gap-5 text-[#B7B7B780] w-full justify-center">
                                                     <hr className="w-[90px]" />
                                                     <div className="flex flex-col items-center text-[10px]">
-                                                        <p className="italic">
+                                                        <p className="italic text-[10px]">
                                                             You started a new chat with {model}
                                                         </p>
-                                                        <p>
+                                                        <p className=' text-[10px]'>
                                                             {moment(createdAt)
                                                                 .format("ddd, DD MMM-h:mma")
                                                                 .toUpperCase()}
@@ -587,7 +587,7 @@ function Doctors() {
                                                 }
                                                 type="button"
                                                 handleClick={() => setShowAi(!showAi)}
-                                                className="!h-[35px] !w-[120px] px-3 !text-[12px] !bg-[#ABD9F60D] !text-[#F9F9F9] !font-extralight"
+                                                className="!h-[35px] !w-[140px] px-3 !text-[12px] !bg-[#ABD9F60D] !text-[#F9F9F9] !font-extralight"
                                             />
                                         </div>
                                     </div>
