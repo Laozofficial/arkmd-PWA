@@ -128,7 +128,7 @@ function Profile() {
                                     className='h-full w-full object-cover'
                                 />
                             </div>
-                            <p className='text-[#C5C5C5]'>{planName.charAt(0).toUpperCase() + planName.slice(1)} plan</p>
+                            <p className='text-[#C5C5C5]'>{planName.charAt(0).toUpperCase() + planName.slice(1)}</p>
                         </div>
                         <CustomButton
                             title='Upgrade'
