@@ -119,7 +119,7 @@ function Doctors() {
 
     const aiOptions = [
         { name: 'Elijah', value: 'elijah', desc: 'Pharmacist AI', premium: true, border: '#05F01D33' },
-        { name: 'Gray', value: 'gray', desc: 'Diagnosis AI', premium: false, border: '#FFDE5933' },
+        { name: 'Grey', value: 'grey', desc: 'Diagnosis AI', premium: false, border: '#FFDE5933' },
         { name: 'Noah', value: 'noah', desc: 'Medical knowledge AI', premium: true, border: '#13A1F933' },
     ]
 
@@ -134,7 +134,7 @@ function Doctors() {
 
     const subscriptionCheck = (model: any) => {
 
-        if (getCurrentPlanValue == null && model !== 'gray') {
+        if (getCurrentPlanValue == null && model !== 'grey') {
             CustomNotification(
                 "error",
                 "Only available for paid subscribers"
@@ -150,7 +150,7 @@ function Doctors() {
     const highlightText = (text: string) => {
         return text
             .replace(/@elijah/g, '<span style="color:#05F01D">@elijah</span>')
-            .replace(/@gray/g, '<span style="color:#FFDE59">@gray</span>')
+            .replace(/@grey/g, '<span style="color:#FFDE59">@grey</span>')
             .replace(/@noah/g, '<span style="color:#13A1F9">@noah</span>');
     };
 
@@ -503,8 +503,8 @@ function Doctors() {
                                             <div
                                                 className="text-[10px] rounded-full px-2 py-1 w-[60px] flex items-center justify-center"
                                                 style={{
-                                                    backgroundColor: model == 'gray' ? '#FFDE590D' : model == 'elijah' ? '#05F01D0D' : '#13A1F90D',
-                                                    color: model == 'gray' ? '#FFDE59' : model == 'elijah' ? '#05F01D' : '#13A1F9'
+                                                    backgroundColor: model == 'grey' ? '#FFDE590D' : model == 'elijah' ? '#05F01D0D' : '#13A1F90D',
+                                                    color: model == 'grey' ? '#FFDE59' : model == 'elijah' ? '#05F01D' : '#13A1F9'
                                                 }}
                                             >
                                                 {model && (
