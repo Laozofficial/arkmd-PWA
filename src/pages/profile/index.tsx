@@ -10,19 +10,29 @@ import { useNavigate } from 'react-router-dom'
 import { getCurrentChatHistoryAtom } from '../../recoil/atom/chat'
 import { getProfile } from '../../api/auth'
 import CustomLoader from '../../components/atoms/CustomLoader'
+import { getCurrentPlanAtom } from '../../recoil/atom/price'
 
 function Profile() {
 
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [planName, setplanName] = useState('');
 
     const [, setChatHistoryAtom] = useRecoilState(getCurrentChatHistoryAtom);
 
     const [, setUserProfileAtom] = useRecoilState(getUserAtom);
     const getUserProfileAtomValue = useRecoilValue(getUserAtom);
 
+    const getCurrentPlanValue = useRecoilValue(getCurrentPlanAtom);
 
+    const getPlanName = () => {
+        if (getCurrentPlanValue == null) {
+            setplanName('Starter')
+        } else {
+            setplanName(getCurrentPlanValue?.plan_price?.plan.name)
+        }
+    }
 
     const getUser = () => {
         setIsLoading(true);
@@ -41,10 +51,15 @@ function Profile() {
     };
 
 
-
     useEffect(() => {
+        getPlanName();
         getUser();
     }, [])
+
+
+
+
+
 
     if (isLoading) {
         return (
@@ -113,7 +128,7 @@ function Profile() {
                                     className='h-full w-full object-cover'
                                 />
                             </div>
-                            <p className='text-[#C5C5C5]'>Starter plan</p>
+                            <p className='text-[#C5C5C5]'>{planName.charAt(0).toUpperCase() + planName.slice(1)} plan</p>
                         </div>
                         <CustomButton
                             title='Upgrade'
