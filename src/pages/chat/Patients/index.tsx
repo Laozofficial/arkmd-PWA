@@ -339,10 +339,11 @@ function Patients() {
     }, []);
 
     useEffect(() => {
+        // Scroll to bottom after every chat history update, page visit, or relevant UI change
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [getChatHistoryValue, isChatLoading, getChatHistoryValue]);
+    }, [getChatHistoryValue, isChatLoading, showHistory, showSideBar, chat]);
 
     useEffect(() => {
         fetchUserPlans();
