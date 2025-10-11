@@ -1,12 +1,20 @@
+    // Currency formatter for NGN
+    const formatPrice = (value: string | number) => {
+        if (value === 'Free' || value === 'free') return 'Free';
+        const num = typeof value === 'string' ? parseFloat(value) : value;
+        if (isNaN(num)) return value;
+        return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(num);
+    };
 import React, { useEffect, useState } from 'react'
 import { FaX } from 'react-icons/fa6';
 import { IoArrowBackOutline, IoCheckmarkSharp } from 'react-icons/io5';
 import { getAllPlan, getUserPlan } from '../../api/payment';
 import CustomButton from '../../components/atoms/CustomButton';
 import { usePaystackPayment } from 'react-paystack';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { getLoggedUserAtom } from '../../recoil/atom/auth';
 import CustomLoader from '../../components/atoms/CustomLoader';
+import { getCurrentPlanAtom } from '../../recoil/atom/price';
 
 
 
@@ -22,11 +30,13 @@ function Pricing() {
 
     const [nigeriaMonthlyPlan, setnigeriaMonthlyPlan] = useState([]);
     const [nigeriaAnnuallyPlan, setnigeriaAnnuallyPlan] = useState([]);
-    
+
 
     const [planId, setPlanId] = useState('');
 
     const [isAnnual, setIsAnnual] = useState(false);
+
+    const [, setCurrentPlanAtom] = useRecoilState(getCurrentPlanAtom);
 
     const userEmailValue = useRecoilValue(getLoggedUserAtom);
 
@@ -55,12 +65,11 @@ function Pricing() {
     }
 
 
-    console.log();
-
     const fetchUserPlans = () => {
         setIsLoading(true);
         getUserPlan().then((res) => {
             if (res?.success) {
+                setCurrentPlanAtom(res.data)
                 if (res.data == null) {
                     setSelected('free');
                 } else {
@@ -173,7 +182,7 @@ function Pricing() {
                             priceType.map(({ name, value }, index) => (
                                 <div
                                     key={index}
-                                    className={`text-[14px] cursor-pointer ${isAnnual && value === "annually"
+                                    className={`text-[14px] cursor-pointer  ${isAnnual && value === "annually"
                                         ? "bg-gradient-to-l from-[#FFFFFF] to-[#FFDE59] text-[#000000] font-semibold rounded-full py-1 px-3"
                                         : !isAnnual && value === "monthly"
                                             ? "bg-gradient-to-l from-[#FFFFFF] to-[#FFDE59] text-[#000000] font-semibold rounded-full py-1 px-3"
@@ -218,7 +227,7 @@ function Pricing() {
                                             <div className='grid grid-cols-1 gap-1 w-full'>
                                                 <div className="flex items-center justify-between w-full">
                                                     <p className="text-[16px] grid grid-cols-1 ">
-                                                        {name?.toUpperCase()} ({isAnnual ? yearly_price : monthly_price})
+                                                        {name?.toUpperCase()} ({formatPrice(isAnnual ? yearly_price : monthly_price)})
                                                     </p>
                                                     {
                                                         userPlan == null && (
@@ -229,7 +238,7 @@ function Pricing() {
                                                     }
                                                 </div>
                                                 <p className="text-[16px] ">
-                                                    NGN (NGN {isAnnual ? yearly_price : monthly_price}) {isAnnual ? "yr" : "/monthly"}
+                                                    {formatPrice(isAnnual ? yearly_price : monthly_price)} {isAnnual ? "/yr" : "/monthly"}
                                                 </p>
                                             </div>
                                         </div>
@@ -265,7 +274,7 @@ function Pricing() {
                                     <div className='grid grid-cols-1 gap-1 w-full'>
                                         <div className="flex items-center justify-between w-full">
                                             <p className="text-[16px] grid grid-cols-1 ">
-                                                {plan?.name?.toUpperCase()} (NGN {price})
+                                                {plan?.name?.toUpperCase()} ({formatPrice(price)})
                                             </p>
                                             {
                                                 userPlan !== null &&
@@ -277,7 +286,7 @@ function Pricing() {
                                             }
                                         </div>
                                         <p className="text-[16px] ">
-                                            NGN {price} {frequency === "monthly" ? "/monthly" : "/yr"}
+                                            {formatPrice(price)} {frequency === "monthly" ? "/monthly" : "/yr"}
                                         </p>
                                     </div>
                                 </div>

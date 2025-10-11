@@ -1712,14 +1712,14 @@
     promise-retry "^2.0.1"
 
 "@sigstore/sign@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@sigstore/sign/-/sign-4.0.0.tgz#bfa8754b00597594f48c48102805c26697b96623"
-  integrity sha512-5+IadiqPzRRMfvftHONzpeH2EzlDNuBiTMC3Lx7+9tLqn/4xbWVfSZA+YaOzKCn86k5BWfJ+aGO9v+pQmIyxqQ==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@sigstore/sign/-/sign-4.0.1.tgz#36ed397d0528e4da880b9060e26234098de5d35b"
+  integrity sha512-KFNGy01gx9Y3IBPG/CergxR9RZpN43N+lt3EozEfeoyqm8vEiLxwRl3ZO5sPx3Obv1ix/p7FWOlPc2Jgwfp9PA==
   dependencies:
     "@sigstore/bundle" "^4.0.0"
     "@sigstore/core" "^3.0.0"
     "@sigstore/protobuf-specs" "^0.5.0"
-    make-fetch-happen "^15.0.0"
+    make-fetch-happen "^15.0.2"
     proc-log "^5.0.0"
     promise-retry "^2.0.1"
 
@@ -4332,9 +4332,9 @@ lru-cache@^10.0.1, lru-cache@^10.2.0, lru-cache@^10.2.2:
   integrity sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==
 
 lru-cache@^11.0.0, lru-cache@^11.1.0, lru-cache@^11.2.1:
-  version "11.2.1"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-11.2.1.tgz#d426ac471521729c6c1acda5f7a633eadaa28db2"
-  integrity sha512-r8LA6i4LP4EeWOhqBaZZjDWwehd1xUJPCJd9Sv300H0ZmcUER4+JPh7bqqZeqs1o5pgtgvXm+d9UGrB5zZGDiQ==
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-11.2.2.tgz#40fd37edffcfae4b2940379c0722dc6eeaa75f24"
+  integrity sha512-F9ODfyqML2coTIsQpSkRHnLSZMtkU8Q+mSfcaIyKwy58u+8k5nvAYeiNhsyMARvzNcXJ9QfWVrcPsC9e9rAxtg==
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -4379,7 +4379,7 @@ make-fetch-happen@^14.0.0, make-fetch-happen@^14.0.2, make-fetch-happen@^14.0.3:
     promise-retry "^2.0.1"
     ssri "^12.0.0"
 
-make-fetch-happen@^15.0.0:
+make-fetch-happen@^15.0.0, make-fetch-happen@^15.0.2:
   version "15.0.2"
   resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-15.0.2.tgz#4fd4e6263e0f26852cd73cae04ff2b2e433caa76"
   integrity sha512-sI1NY4lWlXBAfjmCtVWIIpBypbBdhHtcjnwnv+gtCnsaOffyFil3aidszGC8hgzJe+fT1qix05sWxmD/Bmf/oQ==
@@ -4834,6 +4834,11 @@ mkdirp@^3.0.1:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-3.0.1.tgz"
   integrity sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==
 
+moment@^2.30.1:
+  version "2.30.1"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
+  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
+
 motion-dom@^12.23.12:
   version "12.23.12"
   resolved "https://registry.npmjs.org/motion-dom/-/motion-dom-12.23.12.tgz"
@@ -4953,11 +4958,12 @@ npm-package-arg@^13.0.0:
     validate-npm-package-name "^6.0.0"
 
 npm-packlist@^10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-10.0.1.tgz#236853e6ebff06e70fedd7a6a054f553afe19023"
-  integrity sha512-vaC03b2PqJA6QqmwHi1jNU8fAPXEnnyv4j/W4PVfgm24C4/zZGSVut3z0YUeN0WIFCo1oGOL02+6LbvFK7JL4Q==
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-10.0.2.tgz#b64877552bc9bf756c10a1795baa436f3d226370"
+  integrity sha512-DrIWNiWT0FTdDRjGOYfEEZUNe1IzaSZ+up7qBTKnrQDySpdmuOQvytrqQlpK5QrCA4IThMvL4wTumqaa1ZvVIQ==
   dependencies:
     ignore-walk "^8.0.0"
+    proc-log "^5.0.0"
 
 npm-pick-manifest@^10.0.0:
   version "10.0.0"

@@ -1,6 +1,7 @@
 // import { decryptData } from './index';
 import CryptoJS from 'crypto-js';
 
+
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY; 
 
 export const encryptData = (data: string): string => {
@@ -24,3 +25,4 @@ export const decryptData = (encryptedData: string): string => {
     return "null";
   }
 }
+
