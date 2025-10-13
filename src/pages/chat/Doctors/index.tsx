@@ -813,7 +813,7 @@ function Doctors() {
                                         className='h-full w-full object-cover'
                                     />
                                 </div>
-                                <p>Manage patience</p>
+                                <p>Manage patients</p>
                             </div>
                             {/* <div
                                 className="flex gap-2 items-center cursor-pointer"
